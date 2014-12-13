@@ -79,11 +79,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BinaryTree.h" />
+    <ClInclude Include="DamerauLevenshteinDistance.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="RadixTree.h" />
     <ClInclude Include="Sort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DamerauLevenshteinDistance.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RadixTree.cpp" />
   </ItemGroup>

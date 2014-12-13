@@ -1,6 +1,7 @@
 #include "BinaryTree.h"
 #include "Sort.h"
 #include "RadixTree.h"
+#include "DamerauLevenshteinDistance.h"
 
 #include <iostream>
 #include <vector>
@@ -66,5 +67,10 @@ int main()
 	radix_tree.Delete("Tamaru");
 	radix_tree.Delete("Tamarin");
 	radix_tree.Delete("Tama");
+
+	DamerauLevenshteinDistance distance("timng", "timing");
+	distance.PrintDistance();
+	distance.UpdateDistance("ming");
+	distance.PrintDistance();
 	system("pause");
 }
