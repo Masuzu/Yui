@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 class Test
 {
@@ -57,20 +58,23 @@ int main()
 	test.Delete(n);
 
 	RadixTree radix_tree;
-	radix_tree.Insert("Tama");
-	radix_tree.Insert("Tamaru");
-	radix_tree.Insert("Tamarin");
-	std::vector<RadixTree::String> matches;
-	radix_tree.ExactMatching("Tama", matches);
-	bool b = radix_tree.Find("Tam");
-	b = radix_tree.Find("Tamar");
-	radix_tree.Delete("Tamaru");
-	radix_tree.Delete("Tamarin");
-	radix_tree.Delete("Tama");
+	std::ifstream file("..\\SCOWL\\english-words.10");
+	std::string line;
+	while (file >> line)
+		radix_tree.Insert(line);
+	file.close();
+	file.open("..\\SCOWL\\english-words.20");
+	while (file >> line)
+		radix_tree.Insert(line);
+	file.close();
 
-	DamerauLevenshteinDistance distance("timng", "timing");
-	distance.PrintDistance();
-	distance.UpdateDistance("ming");
+	std::vector<RadixTree::String> matches;
+	radix_tree.ApproximateMatching("teach", matches);
+
+	for (auto s : matches)
+		std::cout << s << std::endl;
+
+	DamerauLevenshteinDistance distance("Tamqsd", "Tamarin");
 	distance.PrintDistance();
 	system("pause");
 }

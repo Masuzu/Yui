@@ -31,7 +31,7 @@ DamerauLevenshteinDistance::DamerauLevenshteinDistance(const DamerauLevenshteinD
 		distance_matrix_[i] = new int[reference_.length() + 1];
 	for (int i = 0; i < num_rows_; ++i)
 	{
-		for (int j = 0; j < reference_.length(); ++j)
+		for (int j = 0; j < reference_.length() + 1; ++j)
 			distance_matrix_[i][j] = distance.distance_matrix_[i][j];
 	}
 }
@@ -61,10 +61,12 @@ void DamerauLevenshteinDistance::UpdateDistance(const std::string &s)
 				insertion_cost = distance_matrix_[current_index_][j - 1] + kInsertionCost;
 				deletion_cost = distance_matrix_[__DISTANCE_INDEX(current_index_ - 1)][j] + kDeletionCost;
 				matching_cost = distance_matrix_[__DISTANCE_INDEX(current_index_ - 1)][j - 1] + ((reference_[j - 1] == s[i - 1]) ? 0 : kSubstitutionCost);
-				if (num_rows_ >= 2 && i>1 && j > 1)
+				if (num_rows_ >= 2 && i > 1 && j > 1)
 				{
 					if (reference_[j - 1] == s[i - 2] && reference_[j - 2] == s[i - 1])
 						transposition_cost = distance_matrix_[__DISTANCE_INDEX(current_index_ - 2)][j - 2] + kTranspositionCost;
+					else
+						transposition_cost = INT_MAX;
 				}
 				else
 					transposition_cost = INT_MAX;

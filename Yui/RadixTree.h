@@ -16,6 +16,8 @@
 #include <string>
 #include <vector>
 
+#include "DamerauLevenshteinDistance.h"
+
 class RadixTree
 {
 public:
@@ -42,8 +44,8 @@ private:
 		// Returns the length of the longest common prefix between prefix_ and s
 		unsigned int LongestCommonPrefix(const Character *s, unsigned int length_of_s);
 
-		// Returns the new leaf node
-		Node *InternalInsert(const Character *s, unsigned int length_of_s);
+		// Returns true if s did not exist already in the radix tree
+		bool InternalInsert(const Character *s, unsigned int length_of_s);
 		Node *InternalFind(const Character *s, unsigned int length_of_s);
 	
 		// Returns a pointer to the node to be deleted
@@ -53,8 +55,17 @@ private:
 		// Returns the new node n1.
 		Node *Split(unsigned int k);
 
+		// Matches s with prefix_. prefix is used to concatenate the prefixes of the traversed nodes to rebuild the words.
 		void ExactMatching(const Character *s, unsigned int length_of_s, std::vector<String> &v, const String &prefix);
+		// DFS from this node while adding the words found to v
 		void DFS(std::vector<String> &v, const String &prefix);
+
+		// Updates the distance between distance.reference_ and distance.target_ by appending prefix_ to distance.target_.
+		// The distance can't go lower than distance.min_distance_ when the next nodes are explored, by definition of the
+		// Damerau-Levenshtein distance. If distance.min_distance <= max_distance, the next nodes are explored recursively.
+		// Worst case running time: O(|A|^(k+max_distance)) where A is the alphabet and k the length of distance.reference_.
+		// However, thanks to search space pruning, it runs fast enough for spell-checker applications.
+		void ApproximateMatching(std::vector<String> &v, DamerauLevenshteinDistance distance, int max_distance);
 
 		void MergeWithLink();
 		void MergeWithNext();
@@ -69,6 +80,7 @@ private:
 	};
 
 	Node *root_node_ = nullptr;
+	int num_words_ = 0;
 
 public:
 	inline RadixTree()	{}
@@ -85,8 +97,10 @@ public:
 	void Delete(const Character *s);
 	// Deletes s and recursively merges the nodes found on the way
 	void Delete(const String &s);
-	// The strings beginning with s are returned in v
+	// Returns in v the strings beginning with s
 	void ExactMatching(const String &s, std::vector<String> &v);
+	// Returns in v the strings whose Damerau-Levenshtein distance from s is lower than 3
+	void ApproximateMatching(const String &s, std::vector<String> &v);
 };
 
 #undef __USE_CHAR_T

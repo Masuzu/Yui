@@ -4,18 +4,18 @@
 
 #define __MIN(x, y)	(((x) < (y)) ? (x) : (y))
 
-RadixTree::Node *RadixTree::Node::InternalInsert(const Character *s, unsigned int length_of_s)
+bool RadixTree::Node::InternalInsert(const Character *s, unsigned int length_of_s)
 {
 	// Find the node which has a common prefix with s
 	unsigned int l = LongestCommonPrefix(s, length_of_s);
-	if (!l)
+	if (l == 0)
 	{
 		if (next_)
 			return next_->InternalInsert(s, length_of_s);
 		else
 		{
 			next_ = new Node(s, length_of_s);
-			return next_;
+			return true;
 		}
 	}
 	else
@@ -28,13 +28,14 @@ RadixTree::Node *RadixTree::Node::InternalInsert(const Character *s, unsigned in
 			else
 			{
 				n->link_ = new Node(s + l, length_of_s - l);
-				return n->link_;
+				return true;
 			}
 		}
 		else
 		{
+			bool new_node = !n->leaf_node_;
 			n->leaf_node_ = true;
-			return n;
+			return new_node;
 		}
 	}
 }
@@ -43,7 +44,7 @@ RadixTree::Node *RadixTree::Node::InternalFind(const Character *s, unsigned int 
 {
 	// Find the node which has a common prefix with s
 	unsigned int l = LongestCommonPrefix(s, length_of_s);
-	if (!l)
+	if (l == 0)
 	{
 		if (next_)
 			return next_->InternalFind(s, length_of_s);
@@ -73,7 +74,7 @@ RadixTree::Node *RadixTree::Node::InternalFind(const Character *s, unsigned int 
 void RadixTree::Node::InternalDelete(const Character *s, unsigned int length_of_s)
 {
 	unsigned int l = LongestCommonPrefix(s, length_of_s);
-	if (!l)
+	if (l == 0)
 	{
 		if (next_)
 		{
@@ -120,7 +121,7 @@ RadixTree::Node *RadixTree::Node::Split(unsigned int k)
 void RadixTree::Node::ExactMatching(const Character *s, unsigned int length_of_s, std::vector<String> &v, const String &prefix)
 {
 	unsigned int l = LongestCommonPrefix(s, length_of_s);
-	if (!l)
+	if (l == 0)
 	{
 		if (next_)
 			next_->ExactMatching(s, length_of_s, v, prefix);
@@ -151,6 +152,23 @@ void RadixTree::Node::DFS(std::vector<String> &v, const String &prefix)
 		link_->DFS(v, prefix + prefix_);
 	if (next_)
 		next_->DFS(v, prefix);
+}
+
+void RadixTree::Node::ApproximateMatching(std::vector<String> &v, DamerauLevenshteinDistance distance, int max_distance)
+{
+	if (distance.min_distance() <= max_distance)
+	{
+		if (next_)
+			next_->ApproximateMatching(v, distance, max_distance);
+	}
+	distance.UpdateDistance(prefix_);
+	if (leaf_node_ && distance.distance() <= max_distance)
+		v.push_back(distance.target());
+	if (distance.min_distance() <= max_distance)
+	{
+		if (link_)
+			link_->ApproximateMatching(v, distance, max_distance);
+	}
 }
 
 void RadixTree::Node::MergeWithLink()
@@ -231,18 +249,34 @@ RadixTree::~RadixTree()
 
 void RadixTree::Insert(const Character *s)
 {
+	if (strlen(s) == 0)
+		return;
 	if (!root_node_)
+	{
 		root_node_ = new Node(s);
+		++num_words_;
+	}
 	else
-		root_node_->InternalInsert(s, strlen(s));
+	{
+		if (root_node_->InternalInsert(s, strlen(s)))
+			++num_words_;
+	}
 }
 
 void RadixTree::Insert(const String &s)
 {
+	if (s.empty())
+		return;
 	if (!root_node_)
+	{
 		root_node_ = new Node(s);
+		++num_words_;
+	}
 	else
-		root_node_->InternalInsert(s.c_str(), s.length());
+	{
+		if (root_node_->InternalInsert(s.c_str(), s.length()))
+			++num_words_;
+	}
 }
 
 bool RadixTree::Find(const Character *s)
@@ -297,4 +331,10 @@ void RadixTree::ExactMatching(const String &s, std::vector<String> &v)
 {
 	if (root_node_)
 		root_node_->ExactMatching(s.c_str(), s.length(), v, "");
+}
+
+void RadixTree::ApproximateMatching(const String &s, std::vector<String> &v)
+{
+	if (root_node_)
+		root_node_->ApproximateMatching(v, DamerauLevenshteinDistance(s), __MIN(unsigned int(3), s.length() / 4));
 }
