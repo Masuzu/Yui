@@ -82,6 +82,7 @@
     <ClInclude Include="DamerauLevenshteinDistance.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="RadixTree.h" />
+    <ClInclude Include="RBTree.h" />
     <ClInclude Include="Sort.h" />
   </ItemGroup>
   <ItemGroup>

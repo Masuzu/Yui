@@ -3,38 +3,37 @@
 #include <list>
 #include <stack>
 
-template<typename Element>
-class BST;
-
-// Nodes hold pointers on data objects of type Element
-template<typename Element>
-class Node
-{
-	friend class BST<Element>;
-private:
-	Element data_;
-	Node *left_ = nullptr;
-	Node *right_ = nullptr;
-	Node *parent_ = nullptr;
-	Node *successor_ = nullptr;
-	Node *predecessor_ = nullptr;
-
-public:
-	Node(const Element &e, Node<Element> *parent = nullptr) : data_(e), parent_(parent)	{}
-	Node(const Element &&e, Node<Element> *parent = nullptr) : data_(std::move(e)), parent_(parent)	{}
-	~Node()	{}
-	Node *left()	const	{ return left_; }
-	Node *right()	const	{ return right_; }
-	Node *parent()	const	{ return parent_; }
-	Node *successor()	const	{ return successor_; }
-	Node *predecessor()	const	{ return predecessor_; }
-	const Element &data()	const	{ return data_; }
-};
-
 // Non-balanced binary search tree
 template<typename Element>
 class BST
 {
+public:
+	// Nodes hold pointers on data objects of type Element
+	template<typename Element>
+	class Node
+	{
+		friend class BST<Element>;
+
+	private:
+		Element data_;
+		Node *left_ = nullptr;
+		Node *right_ = nullptr;
+		Node *parent_;
+		Node *successor_ = nullptr;
+		Node *predecessor_ = nullptr;
+
+	public:
+		Node(const Element &e, Node<Element> *parent = nullptr) : data_(e), parent_(parent)	{}
+		Node(const Element &&e, Node<Element> *parent = nullptr) : data_(std::move(e)), parent_(parent)	{}
+		~Node()	{}
+		Node *left()	const	{ return left_; }
+		Node *right()	const	{ return right_; }
+		Node *parent()	const	{ return parent_; }
+		Node *successor()	const	{ return successor_; }
+		Node *predecessor()	const	{ return predecessor_; }
+		const Element &data()	const	{ return data_; }
+	};
+
 private:
 	Node<Element> *root_ = nullptr;
 	Node<Element> *min_ = nullptr;
@@ -254,9 +253,12 @@ public:
 		UpdateMinMax(*n);
 	}
 
-	// Returns the node whose value is 'e', or nullptr if the node could not be found. Non-recursive.
+	// Returns the node whose value is 'e', or nullptr if the node could not be found. Non-recursive. log(h) time complexity
+	// where h is the height of the tree.
 	Node<Element> *Find(const Element &e)
 	{
+		if (!root_)
+			return nullptr;
 		Node <Element> *n = root_;
 		while (e != n->data())
 		{

@@ -1,6 +1,7 @@
 #include "BinaryTree.h"
 #include "Sort.h"
 #include "RadixTree.h"
+#include "RBTree.h"
 #include "DamerauLevenshteinDistance.h"
 
 #include <iostream>
@@ -56,6 +57,21 @@ int main()
 	test.ConvertToList(list);
 	auto n = test.Find(Test(2));
 	test.Delete(n);
+
+	RBTree<int> RBtree;
+	RBtree.Insert(0);
+	RBtree.Insert(1);
+	RBtree.Insert(8);
+	RBtree.Insert(13);
+	RBtree.Insert(11);
+	RBtree.Insert(6);
+	RBtree.Insert(15);
+	RBtree.Insert(17);
+	RBtree.Insert(25);
+	RBtree.Insert(22);
+	RBtree.Insert(27);
+
+	auto n_RBTree = RBtree.Find(0);
 
 	RadixTree radix_tree;
 	std::ifstream file("..\\SCOWL\\english-words.10");
