@@ -7,6 +7,7 @@
 // 3. All leaves are black. Every newly inserted node has two nil children (left and right), both of them defining leaf nodes.
 // 4. Every red node must have two black child nodes.
 // 5. Every path from a given node to any of its descendant leaves contains the same number of black nodes.
+// See Wikipedia for: Red–black tree for implementation details
 template<typename Element> class RBTree
 {
 private:
@@ -99,7 +100,11 @@ private:
 			}
 		}
 
+		inline Node *left()	const	{ return left_; }
+		inline Node *right()	const	{ return right_; }
+		inline Node *parent()	const	{ return parent_; }
 		inline const Element &data()	const	{ return data_; }
+		inline Color color()	const	{ return color_; }
 		inline bool IsBlack()	const	{ return color_ == kBlack; }
 		inline bool IsRed()	const	{ return color_ == kRed; }
 		inline void PaintInBlack()	{ color_ = kBlack; }
@@ -124,6 +129,20 @@ private:
 			}
 			else
 				return nullptr;
+		}
+		else
+			return nullptr;
+	}
+
+	Node<Element> *FindSibling(Node<Element> *n)
+	{
+		Node<Element> *n_parent = n->parent();
+		if (n_parent)
+		{
+			if (n_parent->left() == n)
+				return n_parent->right();
+			else
+				return n_parent->left();
 		}
 		else
 			return nullptr;
@@ -208,6 +227,185 @@ private:
 			root_ = grand_parent->parent_;
 	}
 
+	// Delete the node 'n' as for a regular binary tree. The difference is the way the deletion of nodes with at most 1 non leaf child is done.
+	void InternalDelete(Node<Element> *n)
+	{
+		Node<Element> *n_parent = n->parent();
+		// Case 1: n has 2 children
+		// Replace n with the minimum element from the subtree whose root is n->right()
+		// The color of the nodes are left unchanged.
+		if (!n->left()->IsLeaf() && !n->right()->IsLeaf())
+		{
+			Node<Element> *min = GetMin(n->right());	// min can't be nullptr
+			Node<Element>::Color saved_n_color = n->color();
+			Node<Element> *saved_min_parent = min->parent();
+			Node<Element> *saved_min_left = min->left();
+			Node<Element> *saved_min_right = min->right();
+
+			// Swap min with n
+			min->parent_ = n_parent;
+			min->left_ = n->left();
+			min->right_ = n->right();
+
+			// Update min's children
+			if (min->left())
+				min->left()->parent_ = min;
+			if (min->right())
+				min->right()->parent_ = min;
+
+			if (n_parent)
+			{
+				if (n_parent->left() == n)
+					n_parent->left_ = min;
+				else
+					n_parent->right_ = min;
+			}
+			// n is the root
+			else
+				root_ = min;
+
+			n->parent_ = saved_min_parent;
+			n->left_ = saved_min_left;
+			n->right_ = saved_min_right;
+			// Update n's children
+			if (n->left())
+				n->left()->parent_ = n;
+			if (n->right())
+				n->right()->parent_ = n;
+
+			if (saved_min_parent->left() == min)
+				saved_min_parent->left_ = n;
+			else
+				saved_min_parent->right_ = n;
+
+			n->color_ = min->color();
+			min->color_ = saved_n_color;
+
+			// After swapping n with min, at most one child of n is a non leaf node
+		}
+		// Case 2: n has at most one non leaf node
+		InternalDeleteOneOrNoNonLeafChild(n);
+	}
+
+	// n has at most one non leaf node
+	void InternalDeleteOneOrNoNonLeafChild(Node<Element> *n)
+	{
+		Node<Element> *n_parent = n->parent();
+		if (n_parent)
+		{
+			Node<Element> *child = (n->right()->IsLeaf() ? n->left() : n->right());
+			if (child->IsLeaf())	// n has two leaf nodes
+				child = new Node<Element>(n_parent);
+			child->parent_ = n_parent;
+			// Replace n with child
+			if (n_parent->left() == n)
+				n_parent->left_ = child;
+			else
+				n_parent->right_ = child;
+
+			if (n->IsBlack())
+			{
+				if (child->IsRed())
+					child->PaintInBlack();
+				else
+					InternalDeleteRoot(child);
+			}
+		}
+		else
+			root_ = nullptr;
+	}
+
+	// n is black (see InternalDeleteOneOrNoNonLeafChild)
+	void InternalDeleteRoot(Node<Element> *n)
+	{
+		if (n->parent())
+			InternalDeleteRedSibling(n);
+		else
+			root_ = n;
+	}
+
+	void InternalDeleteRedSibling(Node<Element> *n)
+	{
+		Node<Element> *sibling = FindSibling(n);
+		// sibling can't be nullptr, for n can't be the root node (see InternalDeleteRoot)
+		if (sibling->IsRed())
+		{
+			Node<Element> *n_parent = n->parent();
+			sibling->PaintInBlack();
+			n_parent->PaintInBlack();
+			if (n_parent->left() == n)
+				n_parent->RotateLeft();
+			else
+				n_parent->RotateRight();
+		}
+		else
+			InternalDeleteBlackSibling(n);
+	}
+
+	void InternalDeleteBlackSibling(Node<Element> *n)
+	{
+		Node<Element> *sibling = FindSibling(n);
+		Node<Element> *n_parent = n->parent();
+		if (n_parent->IsBlack() && sibling->IsBlack() && sibling->left()->IsBlack() && sibling->right()->IsBlack())
+		{
+			sibling->PaintInRed();
+			InternalDeleteRoot(n_parent);
+		}
+		else
+			InternalDeleteBlackSiblingRedParent(n);
+	}
+
+	void InternalDeleteBlackSiblingRedParent(Node<Element> *n)
+	{
+		Node<Element> *sibling = FindSibling(n);
+		Node<Element> *n_parent = n->parent();
+		if (n_parent->IsRed() && sibling->IsBlack() && sibling->left()->IsBlack() && sibling->right()->IsBlack())
+		{
+			sibling->PaintInRed();
+			n_parent->PaintInBlack();
+		}
+		else
+			InternalDeleteBlackSiblingRedLeftSiblingChild(n);
+	}
+
+	void InternalDeleteBlackSiblingRedLeftSiblingChild(Node<Element> *n)
+	{
+		Node<Element> *sibling = FindSibling(n);
+		Node<Element> *n_parent = n->parent();
+		if (sibling->IsBlack())
+		{
+			if (n_parent->left() == n && sibling->left()->IsRed() && sibling->right()->IsBlack())
+			{
+				sibling->left()->PaintInBlack();
+				sibling->PaintInRed();
+				sibling->RotateRight();
+			}
+			else if (n_parent->right() == n && sibling->right()->IsRed() && sibling->left()->IsBlack())
+			{
+				sibling->right()->PaintInBlack();
+				sibling->PaintInRed();
+				sibling->RotateLeft();
+			}
+		}
+		InternalDeleteBlackSiblingRedRightSiblingChild(n);
+	}
+
+	void InternalDeleteBlackSiblingRedRightSiblingChild(Node<Element> *n)
+	{
+		Node<Element> *sibling = FindSibling(n);
+		Node<Element> *n_parent = n->parent();
+		if (n_parent->left() == n)
+		{
+			sibling->right()->PaintInBlack();
+			n_parent->RotateLeft();
+		}
+		else
+		{
+			sibling->left()->PaintInBlack();
+			n_parent->RotateRight();
+		}
+	}
+
 public:
 	// O(log n) worst case time complexity
 	void Insert(const Element &e)
@@ -269,9 +467,9 @@ public:
 		while (e != n->data())
 		{
 			if (e < n->data())
-				n = n->left_;
+				n = n->left();
 			else
-				n = n->right_;
+				n = n->right();
 			if (!n)
 				break;
 		}
@@ -282,6 +480,38 @@ public:
 		}
 		return n;
 	}
+
+	void Delete(Node<Element> *n)
+	{
+		InternalDelete(n);
+		delete n;
+	}
+
+	// Returns the node whose value is minimum in the subtree whose 'root' is passed as argument
+	Node<Element> *GetMin(Node<Element> *root)
+	{
+		if (!root)
+			return nullptr;
+		Node<Element> *n = root;
+		while (n->left())
+			n = n->left();
+		// n is a leaf node.The actual minimum value is its parent
+		return n->parent();
+	}
+
+	// Returns the node whose value is maximum in the subtree whose 'root' is passed as argument
+	Node<Element> *GetMax(Node<Element> *root)
+	{
+		if (!root)
+			return nullptr;
+		Node<Element> *n = root;
+		while (n->right())
+			n = n->right();
+		// n is a leaf node.The actual maximum value is its parent
+		return n->parent();
+	}
+
+	inline Node<Element> *root()	{ return root_; }
 };
 
 #endif

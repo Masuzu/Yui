@@ -26,12 +26,13 @@ public:
 		Node(const Element &e, Node<Element> *parent = nullptr) : data_(e), parent_(parent)	{}
 		Node(const Element &&e, Node<Element> *parent = nullptr) : data_(std::move(e)), parent_(parent)	{}
 		~Node()	{}
-		Node *left()	const	{ return left_; }
-		Node *right()	const	{ return right_; }
-		Node *parent()	const	{ return parent_; }
-		Node *successor()	const	{ return successor_; }
-		Node *predecessor()	const	{ return predecessor_; }
-		const Element &data()	const	{ return data_; }
+
+		inline Node *left()	const	{ return left_; }
+		inline Node *right()	const	{ return right_; }
+		inline Node *parent()	const	{ return parent_; }
+		inline Node *successor()	const	{ return successor_; }
+		inline Node *predecessor()	const	{ return predecessor_; }
+		inline const Element &data()	const	{ return data_; }
 	};
 
 private:
@@ -135,16 +136,16 @@ private:
 		if (n->left() && n->right())
 		{
 			Node<Element> *min = GetMin(n->right());	// min can't be nullptr
-			InternalDelete(min);	// min->left() is nullptr
-			// Swap min with n
+			InternalDelete(min);	// min->left() and min->right() are nullptr, see case 4
+			// Replace n with min
 			min->parent_ = n_parent;
 			min->left_ = n->left();
 			min->right_ = n->right();
 			// Update min's children
-			if (n->left())
-				n->left_->parent_ = min;
-			if (n->right())
-				n->right_->parent_ = min;
+			if (min->left())
+				min->left()->parent_ = min;
+			if (min->right())
+				min->right()->parent_ = min;
 
 			if (n_parent)
 			{
@@ -287,6 +288,8 @@ public:
 	// Returns the node whose value is minimum in the subtree whose 'root' is passed as argument
 	Node<Element> *GetMin(Node<Element> *root)
 	{
+		if (!root)
+			return nullptr;
 		Node<Element> *n = root;
 		while (n->left())
 			n = n->left();
@@ -296,6 +299,8 @@ public:
 	// Returns the node whose value is maximum in the subtree whose 'root' is passed as argument
 	Node<Element> *GetMax(Node<Element> *root)
 	{
+		if (!root)
+			return nullptr;
 		Node<Element> *n = root;
 		while (n->right())
 			n = n->right();
@@ -322,9 +327,9 @@ public:
 		}
 	}
 
-	Node<Element> *root()	{ return root_; }
+	inline Node<Element> *root()	{ return root_; }
 	// Returns the min element in constant time
-	Node<Element> *min()	{ return min_; }
+	inline Node<Element> *min()	{ return min_; }
 	// Returns the max element in constant time
-	Node<Element> *max()	{ return max_; }
+	inline Node<Element> *max()	{ return max_; }
 };

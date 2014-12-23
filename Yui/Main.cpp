@@ -3,10 +3,12 @@
 #include "RadixTree.h"
 #include "RBTree.h"
 #include "DamerauLevenshteinDistance.h"
+#include "HanoiTower.h"
 
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <stack>
 
 class Test
 {
@@ -25,6 +27,8 @@ public:
 
 int main()
 {
+	HanoiTower hanoi(HanoiTower::Left, 6);
+	int num_moves =	hanoi.Move(HanoiTower::Left, HanoiTower::Middle, 6);
 	std::vector<Test> v;
 	v.push_back(Test(6));
 	v.push_back(Test(2));
@@ -59,7 +63,6 @@ int main()
 	test.Delete(n);
 
 	RBTree<int> RBtree;
-	RBtree.Insert(0);
 	RBtree.Insert(1);
 	RBtree.Insert(8);
 	RBtree.Insert(13);
@@ -71,7 +74,9 @@ int main()
 	RBtree.Insert(22);
 	RBtree.Insert(27);
 
-	auto n_RBTree = RBtree.Find(0);
+	auto n_RBTree_min = RBtree.GetMin(RBtree.root());
+	auto n_RBTree_max = RBtree.GetMax(RBtree.root());
+	RBtree.Delete(RBtree.root());
 
 	RadixTree radix_tree;
 	std::ifstream file("..\\SCOWL\\english-words.10");

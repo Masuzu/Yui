@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="DamerauLevenshteinDistance.h" />
+    <ClInclude Include="HanoiTower.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="RadixTree.h" />
     <ClInclude Include="RBTree.h" />
@@ -87,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DamerauLevenshteinDistance.cpp" />
+    <ClCompile Include="HanoiTower.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RadixTree.cpp" />
   </ItemGroup>

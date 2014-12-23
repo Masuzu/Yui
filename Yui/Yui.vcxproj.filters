@@ -33,6 +33,9 @@
     <ClInclude Include="RBTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HanoiTower.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DamerauLevenshteinDistance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HanoiTower.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
