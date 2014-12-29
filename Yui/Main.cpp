@@ -4,11 +4,14 @@
 #include "RBTree.h"
 #include "DamerauLevenshteinDistance.h"
 #include "HanoiTower.h"
+#include "EggDroppingPuzzle.h"
+#include "QuickSelect.h"
 
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <stack>
+#include <iterator>
 
 class Test
 {
@@ -25,8 +28,21 @@ public:
 	bool operator==(const Test &t)	const	{ return i_ == t.i_; }
 };
 
+bool IntComparator(int a, int b)
+{
+	return a > b;
+}
+
 int main()
 {
+	int *array = new int[5];
+	for (int i = 0; i < 5; ++i)
+		array[i] = 5 - i;
+
+	std::vector<int> test_v(array, array+5);
+	auto it = Yui::QuickSelect(test_v.begin(), test_v.end(), 1);
+
+	int num_tries = EggDroppingPuzzle::SolveDP(2, 20);
 	HanoiTower hanoi(HanoiTower::Left, 6);
 	int num_moves =	hanoi.Move(HanoiTower::Left, HanoiTower::Middle, 6);
 	std::vector<Test> v;
@@ -37,9 +53,9 @@ int main()
 	v.push_back(Test(4));
 	v.push_back(Test(5));
 	v.push_back(Test(7));
-	HeapSort(v.begin(), v.end());
+	Yui::HeapSort(v.begin(), v.end());
 
-	Heap<Test> heap;
+	Yui::Heap<Test> heap;
 	heap.Push(Test(6));
 	heap.Push(Test(2));
 	heap.Push(Test(1));
@@ -50,7 +66,7 @@ int main()
 	while (!heap.IsEmpty())
 		heap.Pop(t);
 
-	BST<Test> test;
+	Yui::BST<Test> test;
 	test.Insert(Test(0));
 	test.Insert(Test(-1));
 	test.Insert(Test(4));
@@ -78,7 +94,7 @@ int main()
 	auto n_RBTree_max = RBtree.GetMax(RBtree.root());
 	RBtree.Delete(RBtree.root());
 
-	RadixTree radix_tree;
+	Yui::RadixTree radix_tree;
 	std::ifstream file("..\\SCOWL\\english-words.10");
 	std::string line;
 	while (file >> line)
@@ -89,13 +105,13 @@ int main()
 		radix_tree.Insert(line);
 	file.close();
 
-	std::vector<RadixTree::String> matches;
+	std::vector<Yui::RadixTree::String> matches;
 	radix_tree.ApproximateMatching("teach", matches);
 
 	for (auto s : matches)
 		std::cout << s << std::endl;
 
-	DamerauLevenshteinDistance distance("Tamqsd", "Tamarin");
+	Yui::DamerauLevenshteinDistance distance("Tamqsd", "Tamarin");
 	distance.PrintDistance();
 	system("pause");
 }

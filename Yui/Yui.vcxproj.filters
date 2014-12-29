@@ -36,6 +36,12 @@
     <ClInclude Include="HanoiTower.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EggDroppingPuzzle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuickSelect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -48,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HanoiTower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EggDroppingPuzzle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
