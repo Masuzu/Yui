@@ -3,6 +3,14 @@
 
 #include "Heap.h"
 
+#ifndef __MERGE_SORT_GRANULARITY
+// Yui::MergeSort will fall back to std::sort when there are less than __MERGE_SORT_GRANULARITY elements.
+#define __MERGE_SORT_GRANULARITY 100
+#endif
+
+// Uncomment to divide the two calls to merge sort (on the left and right side of the array to sort) among the available threads
+#define __MERGE_SORT_OMP_SECTIONS
+
 namespace Yui
 {
 	template<typename T>
@@ -64,7 +72,7 @@ namespace Yui
 		T::value_type *buffer = new T::value_type[array_1_size + array_2_size];
 		for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
 		{
-			if (it_2 == it_2_end || comparator(*it_1, *it_2))
+			if (it_2 == it_2_end || (comparator(*it_1, *it_2) && it_1 != it_1_end))
 			{
 				buffer[buffer_idx] = *it_1;
 				++it_1;
@@ -82,30 +90,75 @@ namespace Yui
 
 	// Sort the elements between the iterators it_begin and it_end inclusive
 	template<typename T, typename Comparator>
-	T InternalMergeSort(T it_begin, T it_end, Comparator comparator)
+	T InternalMergeSort(T it_begin, T it_end, Comparator comparator, unsigned int threads)
 	{
 		int range = it_end - it_begin;
 		if (range == 0)
 			return it_begin;
+		if (range < __MERGE_SORT_GRANULARITY)
+		{
+			std::sort(it_begin, it_end + 1);
+			return it_begin;
+		}
 		T it_middle = it_begin + (range >> 1);
-		T sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator);
-		T sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator);
+		T sorted_array_1;
+		T sorted_array_2;
+#ifdef __MERGE_SORT_OMP_SECTIONS
+		if (threads > 1)
+		{
+#pragma omp parallel sections num_threads(threads) 
+			{
+#pragma omp section
+				{
+					sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, threads / 2);
+				}
+#pragma omp section
+				{
+					sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, threads - threads / 2);
+				}
+			}
+		}
+		else
+		{
+			sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, 1);
+			sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, 1);
+		}
+#else
+#pragma omp task firstprivate(it_begin, it_middle, comparator)
+		{
+			sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, threads);
+		}
+#pragma omp task firstprivate(it_middle, it_end, comparator)
+		{
+			sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, threads);
+		}
+#pragma omp taskwait
+#endif
+		// Merge the sorted halves
 		Merge(sorted_array_1, it_middle - it_begin + 1, sorted_array_2, it_end - it_middle, comparator);
 		return it_begin;
 	}
 
 	// Sort the elements between the iterators it_begin and it_end-1 inclusive
 	template<typename T, typename Comparator>
-	void MergeSort(T it_begin, T it_end, Comparator comparator)
+	void MergeSort(T it_begin, T it_end, Comparator comparator, unsigned int threads)
 	{
 		if (it_begin < it_end)
-			InternalMergeSort(it_begin, it_end - 1, comparator);
+#ifndef __MERGE_SORT_OMP_SECTIONS
+#pragma omp parallel num_threads(threads) 
+#pragma omp single
+#endif
+		{
+			InternalMergeSort(it_begin, it_end - 1, comparator, threads);
+		}
 	}
 
+	// Sorts the elements between it_begin and it_end-1 inclusive. Falls back to std::sort when there are less than __MERGE_SORT_GRANULARITY
+	// elements.
 	template<typename T>
-	void MergeSort(T it_begin, T it_end)
+	void MergeSort(T it_begin, T it_end, unsigned int threads = 1)
 	{
-		MergeSort(it_begin, it_end, IsLess<T::value_type>);
+		MergeSort(it_begin, it_end, IsLess<T::value_type>, threads);
 	}
 };
 

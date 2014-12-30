@@ -12,6 +12,8 @@
 #include <fstream>
 #include <stack>
 #include <iterator>
+#include <omp.h>
+#include <chrono>
 
 class Test
 {
@@ -35,13 +37,21 @@ bool IntComparator(int a, int b)
 
 int main()
 {
-	int *array = new int[5];
-	for (int i = 0; i < 5; ++i)
-		array[i] = 5 - i;
+	int *array = new int[10000000];
+	for (int i = 0; i < 10000000; ++i)
+		array[i] = 10000000 - i;
+	std::random_shuffle(array, array + 10000000);
 
-	std::vector<int> test_v(array, array+5);
-	auto it = Yui::QuickSelect(test_v.begin(), test_v.end(), 1);
+	std::vector<int> test_v(array, array + 10000000);
+	//auto it = Yui::QuickSelectMax(test_v.begin(), test_v.end(), 1);
 
+	auto t_start = std::chrono::high_resolution_clock::now();
+	Yui::MergeSort(test_v.begin(), test_v.end(), 2);
+	auto t_end = std::chrono::high_resolution_clock::now();
+
+	std::cout << "Time elapsed for MergeSort " << std::chrono::duration<double, std::milli>(t_end - t_start).count() << " ms\n";
+
+	
 	int num_tries = EggDroppingPuzzle::SolveDP(2, 20);
 	HanoiTower hanoi(HanoiTower::Left, 6);
 	int num_moves =	hanoi.Move(HanoiTower::Left, HanoiTower::Middle, 6);
@@ -111,7 +121,9 @@ int main()
 	for (auto s : matches)
 		std::cout << s << std::endl;
 
+#ifdef _DEBUG
 	Yui::DamerauLevenshteinDistance distance("Tamqsd", "Tamarin");
 	distance.PrintDistance();
+#endif
 	system("pause");
 }
