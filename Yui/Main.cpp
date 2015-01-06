@@ -15,6 +15,8 @@
 #include <omp.h>
 #include <chrono>
 
+#define __NUM_ELEMENTS	50
+
 class Test
 {
 private:
@@ -47,17 +49,17 @@ int main()
 	std::vector<int> test_v2(array2, array2 + 200);
 	Yui::PMerge(test_v2.begin(), 100, test_v1.begin(), 100, Yui::IsLess<int>, 1);
 
-	int *array = new int[100000000];
-	for (int i = 0; i < 100000000; ++i)
-		array[i] = 100000000 - i;
-	std::random_shuffle(array, array + 100000000);
+	int *array = new int[__NUM_ELEMENTS];
+	for (int i = 0; i < __NUM_ELEMENTS; ++i)
+		array[i] = __NUM_ELEMENTS - i;
+	std::random_shuffle(array, array + __NUM_ELEMENTS);
 
-	std::vector<int> test_v(array, array + 100000000);
+	std::vector<int> test_v(array, array + __NUM_ELEMENTS);
 
 	//auto it = Yui::QuickSelectMax(test_v.begin(), test_v.end(), 1);
 
 	auto t_start = std::chrono::high_resolution_clock::now();
-	Yui::MergeSort(test_v.begin(), test_v.end(), 2);
+	Yui::MergeSort(test_v.begin(), test_v.end(), 1);
 	auto t_end = std::chrono::high_resolution_clock::now();
 
 	std::cout << "Time elapsed for MergeSort " << std::chrono::duration<double, std::milli>(t_end - t_start).count() << " ms\n";
