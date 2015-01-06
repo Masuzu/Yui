@@ -72,12 +72,12 @@ namespace Yui
 		T::value_type *buffer = new T::value_type[array_1_size + array_2_size];
 		for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
 		{
-			if (it_2 == it_2_end || (comparator(*it_1, *it_2) && it_1 != it_1_end))
+			if (it_2 == it_2_end || (it_1 != it_1_end && comparator(*it_1, *it_2)))
 			{
 				buffer[buffer_idx] = *it_1;
 				++it_1;
 			}
-			else if (it_1 == it_1_end || comparator(*it_2, *it_1))
+			else
 			{
 				buffer[buffer_idx] = *it_2;
 				++it_2;
@@ -86,6 +86,97 @@ namespace Yui
 		for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
 			*(it_array_1 + buffer_idx) = buffer[buffer_idx];
 		delete buffer;
+	}
+
+	template<typename T, typename Comparator>
+	void MergeInto(T it_array_1, size_t array_1_size, T it_array_2, size_t array_2_size, Comparator comparator, T it_output)
+	{
+		T it_1 = it_array_1;
+		T it_2 = it_array_2;
+		T it_1_end = it_array_1 + array_1_size;
+		T it_2_end = it_array_2 + array_2_size;
+
+		for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
+		{
+			if (it_2 == it_2_end || (it_1 != it_1_end && comparator(*it_1, *it_2)))
+			{
+				*(it_output + buffer_idx) = *it_1;
+				++it_1;
+			}
+			else
+			{
+				*(it_output + buffer_idx) = *it_2;
+				++it_2;
+			}
+		}
+	}
+
+	template<typename T, typename V, typename Comparator>
+	T BinarySearch(V value, T it, size_t array_size, Comparator comparator)
+	{
+		T it_end = it + array_size;
+		while (it < it_end)
+		{
+			T it_mid = it + ((it_end - it) / 2);
+			if (comparator(*it_mid, value))
+				it = it_mid + 1;
+			else
+				it_end = it_mid;
+		}
+		return it_end;
+	}
+
+	template<typename T, typename Comparator>
+	void PMerge(T it_array_1, size_t array_1_size, T it_array_2, size_t array_2_size, Comparator comparator, unsigned int threads)
+	{
+		T::value_type *buffer = new T::value_type[array_1_size + array_2_size];
+		PMergeInto(it_array_1, array_1_size, it_array_2, array_2_size, comparator, buffer, threads);
+		for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
+			*(it_array_1 + buffer_idx) = buffer[buffer_idx];
+		delete buffer;
+	}
+
+	template<typename T, typename U, typename Comparator>
+	void PMergeInto(T it_array_1, size_t array_1_size, T it_array_2, size_t array_2_size, Comparator comparator, U it_output, unsigned int threads)
+	{
+		// Ensure that the first array has more element than the second one
+		if (array_1_size < array_2_size)
+		{
+			std::swap(it_array_1, it_array_2);
+			std::swap(array_1_size, array_2_size);
+		}
+		if (array_1_size == 0)
+			return;
+		else
+		{
+			T it_pivot = it_array_1 + (array_1_size >> 1);
+			T it_pivot_2 = BinarySearch(*it_pivot, it_array_2, array_2_size, comparator);
+			U it_pivot_in_output_array = it_output + ((it_pivot - it_array_1) + (it_pivot_2 - it_array_2));
+			*it_pivot_in_output_array = *it_pivot;
+
+			int left_size = (array_1_size >> 1);
+			int right_size = it_pivot_2 - it_array_2;
+
+			if (threads > 1)
+			{
+#pragma omp parallel sections num_threads(threads) 
+				{
+#pragma omp section
+					{
+						PMergeInto(it_array_1, left_size, it_array_2, right_size, comparator, it_output, threads >> 1);
+					}
+#pragma omp section
+					{
+						PMergeInto(it_pivot + 1, array_1_size - left_size - 1, it_pivot_2, array_2_size - right_size, comparator, it_pivot_in_output_array + 1, threads - (threads >> 1));
+					}
+				}
+			}
+			else
+			{
+				PMergeInto(it_array_1, left_size, it_array_2, right_size, comparator, it_output, 1);
+				PMergeInto(it_pivot + 1, array_1_size - left_size - 1, it_pivot_2, array_2_size - right_size, comparator, it_pivot_in_output_array + 1, 1);
+			}
+		}
 	}
 
 	// Sort the elements between the iterators it_begin and it_end inclusive
@@ -110,11 +201,11 @@ namespace Yui
 			{
 #pragma omp section
 				{
-					sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, threads / 2);
+					sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, threads >> 1);
 				}
 #pragma omp section
 				{
-					sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, threads - threads / 2);
+					sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, threads - (threads >> 1));
 				}
 			}
 		}
@@ -135,7 +226,11 @@ namespace Yui
 #pragma omp taskwait
 #endif
 		// Merge the sorted halves
-		Merge(sorted_array_1, it_middle - it_begin + 1, sorted_array_2, it_end - it_middle, comparator);
+		if (threads > 1)
+			PMerge(sorted_array_1, it_middle - it_begin + 1, sorted_array_2, it_end - it_middle, comparator, threads);
+		else
+			Merge(sorted_array_1, it_middle - it_begin + 1, sorted_array_2, it_end - it_middle, comparator);
+
 		return it_begin;
 	}
 

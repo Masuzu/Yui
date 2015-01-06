@@ -37,12 +37,23 @@ bool IntComparator(int a, int b)
 
 int main()
 {
-	int *array = new int[10000000];
-	for (int i = 0; i < 10000000; ++i)
-		array[i] = 10000000 - i;
-	std::random_shuffle(array, array + 10000000);
+	int *array1 = new int[100];
+	for (int i = 0; i < 100; ++i)
+		array1[i] = i+100;
+	std::vector<int> test_v1(array1, array1 + 100);
+	int *array2 = new int[200];
+	for (int i = 0; i < 100; ++i)
+		array2[i] = i;
+	std::vector<int> test_v2(array2, array2 + 200);
+	Yui::PMerge(test_v2.begin(), 100, test_v1.begin(), 100, Yui::IsLess<int>, 1);
 
-	std::vector<int> test_v(array, array + 10000000);
+	int *array = new int[100000000];
+	for (int i = 0; i < 100000000; ++i)
+		array[i] = 100000000 - i;
+	std::random_shuffle(array, array + 100000000);
+
+	std::vector<int> test_v(array, array + 100000000);
+
 	//auto it = Yui::QuickSelectMax(test_v.begin(), test_v.end(), 1);
 
 	auto t_start = std::chrono::high_resolution_clock::now();
