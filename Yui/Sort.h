@@ -234,61 +234,6 @@ namespace Yui
 		return it_begin;
 	}
 
-	// Sort the elements between the iterators it_begin and it_end inclusive
-	template<typename T, typename U, typename Comparator>
-	T InternalMergeSort(T it_begin, T it_end, Comparator comparator, U output, unsigned int threads)
-	{
-		int range = it_end - it_begin;
-		if (range == 0)
-			return it_begin;
-		if (range < __MERGE_SORT_GRANULARITY)
-		{
-			std::sort(it_begin, it_end + 1);
-			return it_begin;
-		}
-		T it_middle = it_begin + (range >> 1);
-		T sorted_array_1;
-		T sorted_array_2;
-#ifdef __MERGE_SORT_OMP_SECTIONS
-		if (threads > 1)
-		{
-#pragma omp parallel sections num_threads(threads) 
-			{
-#pragma omp section
-				{
-					sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, output, threads >> 1);
-				}
-#pragma omp section
-				{
-					sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, output + ((it_middle + 1) - it_begin), threads - (threads >> 1));
-				}
-			}
-		}
-		else
-		{
-			sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, output, 1);
-			sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, output + ((it_middle + 1) - it_begin), 1);
-		}
-#else
-#pragma omp task firstprivate(it_begin, it_middle, comparator)
-		{
-			sorted_array_1 = InternalMergeSort(it_begin, it_middle, comparator, threads);
-		}
-#pragma omp task firstprivate(it_middle, it_end, comparator)
-		{
-			sorted_array_2 = InternalMergeSort(it_middle + 1, it_end, comparator, threads);
-		}
-#pragma omp taskwait
-#endif
-		// Merge the sorted halves
-		if (threads > 1)
-			PMergeInto(sorted_array_1, it_middle - it_begin + 1, sorted_array_2, it_end - it_middle, comparator, output, threads);
-		else
-			MergeInto(sorted_array_1, it_middle - it_begin + 1, sorted_array_2, it_end - it_middle, comparator, output);
-
-		return it_begin;
-	}
-
 	// Sort the elements between the iterators it_begin and it_end-1 inclusive
 	template<typename T, typename Comparator>
 	void MergeSort(T it_begin, T it_end, Comparator comparator, unsigned int threads)
@@ -299,18 +244,7 @@ namespace Yui
 #pragma omp single
 #endif
 		{
-			// If the number of elements is lower than the granularity then fall back to quicksort
-			size_t num_elements = it_end - it_begin;
-			if (num_elements > __MERGE_SORT_GRANULARITY)
-			{	
-				T::value_type *output = new T::value_type[num_elements];
-				InternalMergeSort(it_begin, it_end - 1, comparator, output, threads);
-				for (size_t i = 0; i < num_elements; ++i)
-					*(it_begin + i) = output[i];
-				delete output;
-			}
-			else
-				InternalMergeSort(it_begin, it_end - 1, comparator, threads);
+			InternalMergeSort(it_begin, it_end - 1, comparator, threads);
 		}
 	}
 

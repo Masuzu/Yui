@@ -15,7 +15,7 @@
 #include <omp.h>
 #include <chrono>
 
-#define __NUM_ELEMENTS	50
+#define __NUM_ELEMENTS	300
 
 class Test
 {
@@ -59,7 +59,7 @@ int main()
 	//auto it = Yui::QuickSelectMax(test_v.begin(), test_v.end(), 1);
 
 	auto t_start = std::chrono::high_resolution_clock::now();
-	Yui::MergeSort(test_v.begin(), test_v.end(), 1);
+	Yui::MergeSort(test_v.begin(), test_v.end(), 8);
 	auto t_end = std::chrono::high_resolution_clock::now();
 
 	std::cout << "Time elapsed for MergeSort " << std::chrono::duration<double, std::milli>(t_end - t_start).count() << " ms\n";
