@@ -6,13 +6,12 @@ namespace Yui
 	{
 		if (text.empty() || pattern.empty() || pattern.size() > text.size())
 			return -1;
-		// partial_match_table[i] is the longest proper prefix of pattern.substr(i) which is also a suffix of pattern.substr(i)
-		// Index 0 is the empty character
+
+		// Build the failure function
+		// partial_match_table[i] is the longest proper prefix of pattern.substr(i+1) which is also a suffix of pattern.substr(i+1)
 		int *partial_match_table = new int[pattern.size() + 1];
 		partial_match_table[0] = 0;
 		partial_match_table[1] = 0;
-		// Lenth of the longest proper prefix at the current position in pattern
-		int longest_proper_prefix_length = 0;
 		for (int i = 2; i <= pattern.size(); ++i)
 		{
 			int index_of_next_largest_partial_match = partial_match_table[i - 1];
