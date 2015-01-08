@@ -42,6 +42,9 @@
     <ClInclude Include="QuickSelect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StringSearching.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EggDroppingPuzzle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StringSearching.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

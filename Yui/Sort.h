@@ -126,13 +126,23 @@ namespace Yui
 		return it_end;
 	}
 
+	// O(n) work
+	// O(log^2(n)) span
 	template<typename T, typename Comparator>
 	void PMerge(T it_array_1, size_t array_1_size, T it_array_2, size_t array_2_size, Comparator comparator, unsigned int threads)
 	{
 		T::value_type *buffer = new T::value_type[array_1_size + array_2_size];
 		PMergeInto(it_array_1, array_1_size, it_array_2, array_2_size, comparator, buffer, threads);
-		for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
-			*(it_array_1 + buffer_idx) = buffer[buffer_idx];
+		if (array_1_size + array_2_size > 100)
+		{
+#pragma omp parallel for 
+			for (int buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
+				*(it_array_1 + buffer_idx) = buffer[buffer_idx];
+		}
+		else
+			for (size_t buffer_idx = 0; buffer_idx < array_1_size + array_2_size; ++buffer_idx)
+				*(it_array_1 + buffer_idx) = buffer[buffer_idx];
+
 		delete buffer;
 	}
 

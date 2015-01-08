@@ -6,6 +6,7 @@
 #include "HanoiTower.h"
 #include "EggDroppingPuzzle.h"
 #include "QuickSelect.h"
+#include "StringSearching.h"
 
 #include <iostream>
 #include <vector>
@@ -39,6 +40,7 @@ bool IntComparator(int a, int b)
 
 int main()
 {
+	int idx = Yui::KMPSearch("ABABABC", "ABC");
 	int *array1 = new int[100];
 	for (int i = 0; i < 100; ++i)
 		array1[i] = i+100;
