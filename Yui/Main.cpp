@@ -7,6 +7,7 @@
 #include "EggDroppingPuzzle.h"
 #include "QuickSelect.h"
 #include "StringSearching.h"
+#include "SegmentTree.h"
 
 #include <iostream>
 #include <vector>
@@ -16,7 +17,7 @@
 #include <omp.h>
 #include <chrono>
 
-#define __NUM_ELEMENTS	300
+#define __NUM_ELEMENTS	10000000
 
 class Test
 {
@@ -41,6 +42,14 @@ bool IntComparator(int a, int b)
 int main()
 {
 	int idx = Yui::KMPSearch("ABABABC", "ABC");
+
+	std::vector<int> test_st({ 2, 5, 1, 4, 9, 3 });
+	Yui::SegmentTree<int> segment_tree(test_st);
+	for (int i = 0; i < segment_tree.num_nodes(); ++i)
+		if (segment_tree.nodes()[i].defined_)
+			std::cout << segment_tree.nodes()[i].min_ << "[" << segment_tree.nodes()[i].start_ << "," << segment_tree.nodes()[i].end_ << "]\n";
+	int r_min = segment_tree.GetMinInRange(3, 5);
+
 	int *array1 = new int[100];
 	for (int i = 0; i < 100; ++i)
 		array1[i] = i+100;
@@ -61,7 +70,7 @@ int main()
 	//auto it = Yui::QuickSelectMax(test_v.begin(), test_v.end(), 1);
 
 	auto t_start = std::chrono::high_resolution_clock::now();
-	Yui::MergeSort(test_v.begin(), test_v.end(), 8);
+	Yui::MergeSort(test_v.begin(), test_v.end(), 2);
 	auto t_end = std::chrono::high_resolution_clock::now();
 
 	std::cout << "Time elapsed for MergeSort " << std::chrono::duration<double, std::milli>(t_end - t_start).count() << " ms\n";

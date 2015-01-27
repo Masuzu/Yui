@@ -7,6 +7,7 @@ Set of experiments.
 - Heap and heap sort. Merge sort
 - Radix tree implementation with insertion, deletion, search and auto-completion functionality based on the Damerau-Levenshtein distance
 - Quick select (finds the kth minimum element in average linear time)
+- Segment tree for logarithmic minimum retrieval in 1D range 
 
 Additional reading
 ==================

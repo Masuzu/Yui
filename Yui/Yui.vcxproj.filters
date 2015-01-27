@@ -45,6 +45,9 @@
     <ClInclude Include="StringSearching.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SegmentTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

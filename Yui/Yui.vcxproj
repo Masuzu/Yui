@@ -88,6 +88,7 @@
     <ClInclude Include="QuickSelect.h" />
     <ClInclude Include="RadixTree.h" />
     <ClInclude Include="RBTree.h" />
+    <ClInclude Include="SegmentTree.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="StringSearching.h" />
   </ItemGroup>
