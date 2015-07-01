@@ -1,5 +1,5 @@
-#ifndef __RADIX_TREE_H__
-#define __RADIX_TREE_H__
+#ifndef __RADIX_DICTIONARY_H__
+#define __RADIX_DICTIONARY_H__
 
 // Define __USE_CHAR or __USE_WCHAR_T depending on whether you work with char or wchar_t
 #ifdef __USE_CHAR
@@ -24,7 +24,7 @@ class Category;
 namespace Yui
 {
   template<class T>
-  class RadixDictionnary
+  class RadixDictionary
   {
   public:
 #ifdef __USE_CHAR
@@ -38,7 +38,7 @@ namespace Yui
     // Stores the common strings between the words in the radix tree
     class Node
     {
-      friend class RadixDictionnary;
+      friend class RadixDictionary;
     private:
       // All the nodes following link_ begin with prefix_
       String prefix_;
@@ -376,8 +376,8 @@ namespace Yui
     int num_words_;
     
   public:
-    inline RadixDictionnary() : root_node_(nullptr), num_words_(0)  {}
-    virtual ~RadixDictionnary()
+    inline RadixDictionary() : root_node_(nullptr), num_words_(0)  {}
+    virtual ~RadixDictionary()
     {
       if (root_node_)
         delete root_node_;
