@@ -85,8 +85,11 @@
     <ClInclude Include="EggDroppingPuzzle.h" />
     <ClInclude Include="HanoiTower.h" />
     <ClInclude Include="Heap.h" />
+    <ClInclude Include="LowestCommonAncestor.h" />
     <ClInclude Include="QuickSelect.h" />
+    <ClInclude Include="RadixDictionary.h" />
     <ClInclude Include="RadixTree.h" />
+    <ClInclude Include="RangeMinimumQuery.h" />
     <ClInclude Include="RBTree.h" />
     <ClInclude Include="SegmentTree.h" />
     <ClInclude Include="Sort.h" />

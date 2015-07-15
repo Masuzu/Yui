@@ -48,6 +48,15 @@
     <ClInclude Include="SegmentTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RadixDictionary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RangeMinimumQuery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LowestCommonAncestor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

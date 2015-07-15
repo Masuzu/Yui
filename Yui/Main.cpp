@@ -8,6 +8,7 @@
 #include "QuickSelect.h"
 #include "StringSearching.h"
 #include "SegmentTree.h"
+#include "LowestCommonAncestor.h"
 
 #include <iostream>
 #include <vector>
@@ -39,8 +40,63 @@ bool IntComparator(int a, int b)
 	return a > b;
 }
 
+struct MultCost
+{
+	int min;
+	int M;
+	int N;
+	std::vector<int> split;
+};
+MultCost MinCostMult(const std::vector<std::pair<int, int>> matrices, int start_idx, int num)
+{
+	if (num == 1)
+		return{ 0, matrices[start_idx].first, matrices[start_idx].second };
+	if (num == 2)
+		return{ matrices[start_idx].first*matrices[start_idx].second*matrices[start_idx + 1].second, matrices[start_idx].first, matrices[start_idx + 1].second, { start_idx + 1 } };
+	int min = INT_MAX;
+	int split;
+	MultCost min_mult_cost_1;
+	MultCost min_mult_cost_2;
+	for (int i = start_idx + 1; i <= num - 1; ++i)
+	{
+		auto M1 = MinCostMult(matrices, start_idx, i - start_idx);
+		auto M2 = MinCostMult(matrices, i, num - i);
+		if (min > M1.min + M2.min + M1.M*M1.N*M2.N)
+		{
+			min = M1.min + M2.min + M1.M*M1.N*M2.N;
+			min_mult_cost_1 = M1;
+			min_mult_cost_2 = M2;
+			split = i;
+		}
+	}
+	for (auto s : min_mult_cost_2.split)
+		min_mult_cost_1.split.push_back(s);
+	min_mult_cost_1.split.push_back(split);
+	return{ min, matrices[0].first, matrices[num - 1].second, min_mult_cost_1.split };
+}
+
 int main()
 {
+	Yui::LCANode<char> *root = new Yui::LCANode<char>('A');
+	Yui::LCANode<char> *B = new Yui::LCANode<char>('B');
+	Yui::LCANode<char> *C = new Yui::LCANode<char>('C');
+	Yui::LCANode<char> *D = new Yui::LCANode<char>('D');
+	Yui::LCANode<char> *E = new Yui::LCANode<char>('E');
+	Yui::LCANode<char> *F = new Yui::LCANode<char>('F');
+	root->AddChild(B);
+	root->AddChild(C);
+	B->AddChild(D);
+	D->AddChild(E);
+	D->AddChild(F);
+
+	Yui::LowestCommonAncestor<char> LCA(root);
+	cout << LCA.LCA(root, root)->data() << endl;
+	cout << LCA.LCA(root, F)->data() << endl;
+	cout << LCA.LCA(B, D)->data() << endl;
+	cout << LCA.LCA(E, C)->data() << endl;
+	cout << LCA.LCA(E, F)->data() << endl;
+
+	auto min_cost_matrix_mul = MinCostMult({ { 10, 30 }, { 30, 5 }, { 5, 60 }, {60, 1} }, 0, 4);
 	int idx = Yui::KMPSearch("ABABABC", "ABC");
 
 	std::vector<int> test_st({ 2, 5, 1, 4, 9, 3 });
