@@ -1,7 +1,7 @@
 Yui
 ===
 
-Collection of data structures and algorithms:
+Collection of data structures, algorithms and other puzzles:
 - BST with predecessor and successor access in constant time
 - RB tree (rebalancing is done through a constant number of node rotations, contrary to AVL trees)
 - Heap and heap sort. Merge sort
@@ -10,6 +10,7 @@ Collection of data structures and algorithms:
 - Segment tree for logarithmic minimum retrieval in 1D range 
 - Minimum Range Query in constant time after a preprocessing step in linear time
 - Lowest Common Ancestor in constant time after a preprocessing step in linear time
+- Egg-breaking problem, Hanoi tower
 
 Additional reading
 ==================
