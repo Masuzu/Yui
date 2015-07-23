@@ -3,16 +3,17 @@
 
 #include "RangeMinimumQuery.h"
 
-// Choice to use either a hash map or a binary tree to keep track of the first occurrence of a node in the Euler tour representation 
-#include <unordered_map>
+// Define this symbol to choose the data structure to use to keep track of the first occurrence of a node
+// in the Euler tour representation
 #ifndef _LCA_FIRST_OCCURRENCE_MAP_TYPE
+#include <unordered_map>
 #define _LCA_FIRST_OCCURRENCE_MAP_TYPE	std::unordered_map
 #endif
 
-// The algorithm needs a O(n) time preprocessing step and can then answer LCA quueries in constant time.
-// The first step is to build the Euler tour representation of the input tree. Then RMQ is applied on the array of the levels
-// of the nodes ordered as in the Euler tour representation. R is the array with the position of the first occurrence of a node
-// in the Euler tour. LCA(n1, n2) = Node whose index is RMQ_level(R[n1], R[n2]).
+// The algorithm needs an O(n) time preprocessing step and can then answer LCA queries in constant time.
+// The first step builds the Euler tour representation of the input tree. Then RMQ is applied on the array of the node levels,
+// ordered as in the Euler tour representation. Let R denote the array with the position of the first occurrence of a node
+// in the Euler tour. Then LCA(n1, n2) = Node whose index is RMQ_level(R[n1], R[n2]).
 // https://www.topcoder.com/community/data-science/data-science-tutorials/range-minimum-query-and-lowest-common-ancestor/
 namespace Yui
 {
