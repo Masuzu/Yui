@@ -443,6 +443,28 @@ namespace Yui
 			return false;
 		}
 
+		T *Get(const Character *s)
+		{
+			if (root_node_)
+			{
+				Node *n = root_node_->InternalFind(s, strlen(s));
+				if (n && n->leaf_node_)
+					return n->data_;
+			}
+			return nullptr;
+		}
+		
+		T *Get(const String &s)
+		{
+			if (root_node_)
+			{
+				Node *n = root_node_->InternalFind(s.c_str(), s.length());
+				if (n && n->leaf_node_)
+					return n->data_;
+			}
+			return nullptr;
+		}
+		
 		// Deletes s and recursively merges the nodes found on the way
 		void Delete(const Character *s)
 		{
