@@ -113,4 +113,22 @@ public:
 	}
 };
 
+#if 0
+int main(void)
+{
+	
+	static const int arr[] = {1, 0, 2, 3, 4, 6, -1};
+	std::vector<int> ends (arr, arr + sizeof(arr) / sizeof(arr[0]) );
+	StabbingSegmentTree<int, char> tree(ends);
+	tree.Insert(1, 3, 'A');
+	tree.Insert(6, 3, 'B');
+	tree.Insert(-1, 0, 'C');
+	std::vector<char> res_stabbing_query;
+	tree.StabbingQuery(3, res_stabbing_query);
+	for(int i=0, end = res_stabbing_query.size(); i<end; ++i)
+		std::cout << res_stabbing_query[i];
+	std::cout << std::endl;
+}
+#endf
+
 #endif
