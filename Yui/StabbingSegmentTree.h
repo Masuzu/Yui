@@ -10,7 +10,7 @@ class StabbingSegmentTree
 private:
 	class Node
 	{
-	friend class SegmentTree<T, U>;
+	friend class StabbingSegmentTree<T, U>;
 	private:		
 		T start_;
 		T end_;
@@ -86,7 +86,7 @@ private:
 
 public:
 	// Builds a segment tree whose elementary intervals are described by 'ends'
-	SegmentTree(std::vector<T> &ends)
+	StabbingSegmentTree(std::vector<T> &ends)
 	{
 		int tree_height = ceil(log2(ends.size()));
 		num_nodes_ = 2*(1 << tree_height)-1;
