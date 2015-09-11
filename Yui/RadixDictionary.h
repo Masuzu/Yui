@@ -161,6 +161,8 @@ namespace Yui
 				n2->link_ = link_;
 				link_ = n2;
 				n2->leaf_node_ = leaf_node_;
+				n2->data_ = data_;
+				data_ = nullptr;
 				leaf_node_ = false;
 				return this;
 			}
