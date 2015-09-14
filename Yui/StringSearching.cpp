@@ -1,54 +1,48 @@
-#include "StringSearching.h"
-
-namespace Yui
+int KMPSearch(const std::string &text, const std::string &pattern)
 {
-	int KMPSearch(const std::string &text, const std::string &pattern)
+	if (text.empty() || pattern.empty() || pattern.size() > text.size())
+		return -1;
+	// Build the failure function
+	// lps[i] is the longest proper suffix of pattern.substr(i+1) which is also a prefix of pattern.substr(i+1)
+	int *lps = new int[pattern.size()];
+	lps[0] = 0;
+	for (int i = 1; i < pattern.size(); ++i)
 	{
-		if (text.empty() || pattern.empty() || pattern.size() > text.size())
-			return -1;
-
-		// Build the failure function
-		// partial_match_table[i] is the longest proper prefix of pattern.substr(i+1) which is also a suffix of pattern.substr(i+1)
-		int *partial_match_table = new int[pattern.size() + 1];
-		partial_match_table[0] = 0;
-		partial_match_table[1] = 0;
-		for (int i = 2; i <= pattern.size(); ++i)
+		int index_of_next_largest_partial_match = lps[i - 1];
+		// Try to expand the prefix of length 'index_of_next_largest_partial_match' with the pattern[i-1]
+		while (true)
 		{
-			int index_of_next_largest_partial_match = partial_match_table[i - 1];
-			// Try to expand the prefix of length 'index_of_next_largest_partial_match' with the pattern[i-1]
-			while (true)
+			if (pattern[i - 1] == pattern[index_of_next_largest_partial_match])
 			{
-				if (pattern[i - 1] == pattern[index_of_next_largest_partial_match])
-				{
-					partial_match_table[i] = index_of_next_largest_partial_match + 1;
-					break;
-				}
-				if (index_of_next_largest_partial_match == 0)
-				{
-					partial_match_table[i] = 0;
-					break;
-				}
-				index_of_next_largest_partial_match = partial_match_table[index_of_next_largest_partial_match];
+				lps[i] = index_of_next_largest_partial_match + 1;
+				break;
 			}
-		}
-
-		int index_pattern = 0;
-		int index_text = 0;
-		while (index_text < text.size())
-		{
-			if (pattern[index_pattern] == text[index_text])
+			if (index_of_next_largest_partial_match == 0)
 			{
-				++index_text;
-				++index_pattern;
-				if (index_pattern == pattern.size())
-					return index_text - index_pattern;
-			}
-			else if (index_pattern > 0)
-				index_pattern = partial_match_table[index_pattern];
-			else
-				++index_text;
+				lps[i] = 0;
+				break;
+			}		
+			index_of_next_largest_partial_match = lps[index_of_next_largest_partial_match-1];
 		}
-
-		delete partial_match_table;
 	}
+	int index_pattern = 0;
+	int index_text = 0;
+	while (index_text < text.size())
+	{
+		if (pattern[index_pattern] == text[index_text])
+		{
+			++index_text;
+			++index_pattern;
+			if (index_pattern == pattern.size())
+				return index_text - index_pattern;
+		}
+		else if (index_pattern > 0)
+			// The first index_pattern characters of pattern match text[index_text-index_pattern-1 ... index_text-1]
+			// and lps[index_pattern-1] characters of pattern are both prefix and suffix.
+			// Resume the search from index lps[index_pattern-1].
+			index_pattern = lps[index_pattern-1];
+		else
+			++index_text;
+	}
+	delete lps;
 }
