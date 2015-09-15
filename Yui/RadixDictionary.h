@@ -2,9 +2,10 @@
 #define __RADIX_DICTIONARY_H__
 
 // Define __USE_CHAR or __USE_WCHAR_T depending on whether you work with char or wchar_t
+#define __USE_WCHAR_T
 #ifdef __USE_CHAR
 #undef __USE_WCHAR_T
-#else
+#elif !defined(__USE_WCHAR_T)
 #define __USE_CHAR
 #undef __USE_WCHAR_T
 #endif
@@ -19,9 +20,9 @@
 
 #define __MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-namespace Yui
+namespace Hakken
 {
-	template<class T>
+	template<class T, bool delete_value = false>
 	class RadixDictionary
 	{
 	public:
@@ -81,6 +82,7 @@ namespace Yui
 					{
 						bool new_node = !n->leaf_node_;
 						n->leaf_node_ = true;
+						n->data_ = data;
 						return new_node;
 					}
 				}
@@ -366,6 +368,8 @@ namespace Yui
 				next_(nullptr), link_(nullptr), leaf_node_(true), prefix_(s), data_(nullptr) {}
 			virtual ~Node()
 			{
+				if (delete_value)
+					delete data_;
 				if (next_) delete next_;
 				if (link_) delete link_;
 			}
@@ -455,7 +459,7 @@ namespace Yui
 			}
 			return nullptr;
 		}
-		
+
 		T *Get(const String &s)
 		{
 			if (root_node_)
@@ -466,7 +470,7 @@ namespace Yui
 			}
 			return nullptr;
 		}
-		
+
 		// Deletes s and recursively merges the nodes found on the way
 		void Delete(const Character *s)
 		{
@@ -495,8 +499,9 @@ namespace Yui
 			}
 		}
 
+		typedef std::map < String, T* > Matches;
 		// Returns in v the data whose keys begin with s
-		void ExactMatching(const String &s, std::map<String, T*> &v)
+		void ExactMatching(const String &s, Matches &v)
 		{
 			if (root_node_)
 				root_node_->ExactMatching(s.c_str(), s.length(), v, "");
@@ -513,19 +518,17 @@ namespace Yui
 		void ApproximateMatching(const String &s, std::vector<String> &v)
 		{
 			if (root_node_)
-				root_node_->ApproximateMatching(v, DamerauLevenshteinDistance(s), __MIN((unsigned int)3, s.length() / 4));
+				root_node_->ApproximateMatching(v, DamerauLevenshteinDistance(s), __MIN((unsigned int)3, ceil(double(s.length()) / 4)));
 		}
 
-		void ApproximateMatching(const String &s, std::map<String, T*> &v)
+		void ApproximateMatching(const String &s, Matches &v)
 		{
 			if (root_node_)
-				root_node_->ApproximateMatching(v, DamerauLevenshteinDistance(s), __MIN((unsigned int)3, s.length() / 4));
+				root_node_->ApproximateMatching(v, DamerauLevenshteinDistance(s), __MIN((unsigned int)3, ceil(double(s.length()) / 4)));
 		}
 	};
 };
 
 #undef __MIN
 
-#undef __USE_CHAR_T
-#undef __USE_WCHAR_T
 #endif
