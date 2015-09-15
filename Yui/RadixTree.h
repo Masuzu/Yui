@@ -2,13 +2,13 @@
 #define __RADIX_TREE_H__
 
 // Define __USE_CHAR or __USE_WCHAR_T depending on whether you work with char or wchar_t
+#define __USE_WCHAR_T
 #ifdef __USE_CHAR
 #undef __USE_WCHAR_T
-#else
+#elif !defined(__USE_WCHAR_T)
 #define __USE_CHAR
 #undef __USE_WCHAR_T
 #endif
-
 #ifdef __USE_WCHAR_T
 #undef __USE_CHAR
 #endif
