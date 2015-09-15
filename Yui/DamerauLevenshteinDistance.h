@@ -1,11 +1,29 @@
 #ifndef __DAMERAU_LEVENSHTEIN_DISTANCE_H__
 #define __DAMERAU_LEVENSHTEIN_DISTANCE_H__
 
+// Define __USE_CHAR or __USE_WCHAR_T depending on whether you work with char or wchar_t
+#define __USE_WCHAR_T
+#ifdef __USE_CHAR
+#undef __USE_WCHAR_T
+#elif !defined(__USE_WCHAR_T)
+#define __USE_CHAR
+#undef __USE_WCHAR_T
+#endif
+#ifdef __USE_WCHAR_T
+#undef __USE_CHAR
+#endif
+
 #include <string>
 
-namespace Yui
+namespace Hakken
 {
-	// The Damerau–Levenshtein distance is a distance between two strings given by counting the minimum number of operations needed to 
+#ifdef __USE_CHAR
+	typedef std::string String;
+#else
+	typedef std::wstring String;
+#endif
+
+	// The Damerau-Levenshtein distance is a distance between two strings given by counting the minimum number of operations needed to 
 	// transform one string into the other, where an operation is defined as an insertion, deletion, or substitution of a single character,
 	// or a transposition of two adjacent characters.
 	// http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
@@ -16,8 +34,8 @@ namespace Yui
 	private:
 		// A circular 2D array of distances with 3 rows
 		int **distance_matrix_;
-		std::string reference_;
-		std::string target_;
+		String reference_;
+		String target_;
 		// Index of the current row of distance_matrix_
 		int current_index_;
 		// Number of rows used in distance_matrix_, integer in {1, 2, 3}
@@ -34,17 +52,21 @@ namespace Yui
 
 	public:
 		// Computes the distance from target to reference
-		DamerauLevenshteinDistance(const std::string &reference, const std::string &target = "");
+#ifdef __USE_CHAR
+		DamerauLevenshteinDistance(const String &reference, const String &target = "");
+#else
+		DamerauLevenshteinDistance(const String &reference, const String &target = L"");
+#endif
 		DamerauLevenshteinDistance(const DamerauLevenshteinDistance &distance);
 		~DamerauLevenshteinDistance();
 
 		// Computes the distance between target_+s and reference_. The distance matrix is updated accordingly.
-		void UpdateDistance(const std::string &s);
+		void UpdateDistance(const String &s);
 
 		inline int min_distance()	{ return min_distance_; }
 		inline int distance()	{ return distance_; }
-		inline const std::string &reference()	{ return reference_; }
-		inline const std::string &target()	{ return target_; }
+		inline const String &reference()	{ return reference_; }
+		inline const String &target()	{ return target_; }
 #ifdef _DEBUG
 		void PrintDistance();
 #endif
