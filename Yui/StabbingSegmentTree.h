@@ -60,10 +60,10 @@ private:
 		else
 		{
 			int left_idx = 2*node_idx+1;
-			if(nodes_[left_idx].Intersects(t1, t2))
+			if(left_idx < num_nodes_ && nodes_[left_idx].Intersects(t1, t2))
 				InternalInsert(t1, t2, data, left_idx);
 			int right_idx = 2*node_idx+2;
-			if(nodes_[right_idx].Intersects(t1, t2))
+			if(right_idx < num_nodes_ && nodes_[right_idx].Intersects(t1, t2))
 				InternalInsert(t1, t2, data, right_idx);
 		}
 	}
@@ -77,10 +77,10 @@ private:
 				output.push_back(current.data_[i]);
 		}
 		int left_idx = 2*node_idx+1;
-		if(nodes_[left_idx].Contains(t1))
+		if(left_idx < num_nodes_ && nodes_[left_idx].Contains(t1))
 			InternalStabbingQuery(t1, output, left_idx);
 		int right_idx = 2*node_idx+2;
-		if(nodes_[right_idx].Contains(t1))
+		if(right_idx < num_nodes_ && nodes_[right_idx].Contains(t1))
 			InternalStabbingQuery(t1, output, right_idx);
 	}
 
