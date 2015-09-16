@@ -3,6 +3,7 @@
 
 // Stores intervals of type T where each node has data of type U and allows stabbing queries in O(log(n)+k) time
 // where n is the number of segments and k the number of segments fulfilling the query
+// Warning: inserting intervals whose start and end are not included in the collection 'ends' passed in the constructor will result in invalid results.
 
 template<class T, class U>
 class StabbingSegmentTree
