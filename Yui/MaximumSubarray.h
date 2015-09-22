@@ -3,6 +3,7 @@
 
 namespace Yui
 {
+	// Note: this will return 0 if all the elements are negative
     template<class T>
     T LargestContiguousSum(T *a, int length)
     {
