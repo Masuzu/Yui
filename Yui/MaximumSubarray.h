@@ -21,6 +21,29 @@ namespace Yui
     	}
     	return max_so_far;
     }
+
+    template<class T>
+    T LargestContiguousProduct(T *a, int length)
+    {
+    	static auto max = [](const T& a, const T& b) -> const T&
+	    {
+	        return (a < b) ? b : a;
+	    };
+	    
+    	if(length == 0)
+    		return 0;
+    	T min_so_far = a[0];
+    	T max_so_far = a[0];
+    	T global_max = a[0];
+    	for(int i=1; i<length; ++i)
+    	{
+    		T buffer = max_so_far;
+    		max_so_far = Yui::max(max(a[i], max_so_far*a[i]), min_so_far*a[i]);
+    		min_so_far = max(max(a[i], buffer*a[i]), min_so_far*a[i]);
+    		global_max = max(global_max, max_so_far);
+    	}
+    	return global_max;
+    }
 }
 
 #endif
@@ -32,6 +55,7 @@ using namespace std;
 int main() {
 	int a[] = {-5, 2, -3, 4, 11, 100, -500};
 	cout << Yui::LargestContiguousSum(a, sizeof(a)/sizeof(int)) << endl;
+	cout << Yui::LargestContiguousProduct(a, sizeof(a)/sizeof(int)) << endl;
 	return 0;
 }
 */
