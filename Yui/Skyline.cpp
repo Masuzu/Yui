@@ -1,3 +1,7 @@
+#include <boost/heap/fibonacci_heap.hpp>
+#include <vector>
+#include <unordered_map>
+
 struct Edge
 {
 	bool start;
@@ -18,6 +22,8 @@ std::vector<std::vector<double>> SkylineTestCase1()
 }
 
 // https://leetcode.com/problems/the-skyline-problem/
+// Input : building list where each building is modelled as a triplet {left_edge.position, right_edge.position, height}
+// Runtime : O(B*log(B)) where B is the number of buildings
 // Expected output { { 2, 10 }, { 3, 15 }, { 7, 12 }, { 12, 0 }, { 15, 10 }, { 20, 8 }, { 24, 0 } }
 std::vector<std::pair<int, int>> GetSkyline(std::vector<std::vector<double>> &buildings)
 {
