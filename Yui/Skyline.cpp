@@ -60,7 +60,8 @@ std::vector<std::pair<int, int>> GetSkyline(std::vector<std::vector<double>> &bu
 		}
 		else
 		{
-			// Erase from the priority queue the starting edge of the building and add a keypoint if the current edge height is greater than the remaining edges in the priority queue 
+			// Erase from the priority queue the starting edge of the building and add a keypoint if the 
+			// current edge height is greater than the remaining edges in the priority queue 
 			double height = edge.height;
 			auto handle_it = handles.find(height);
 			heap.erase(handle_it->second);
