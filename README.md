@@ -10,7 +10,7 @@ Collection of data structures, algorithms and other puzzles:
 - Segment tree for logarithmic minimum retrieval in 1D range 
 - Minimum Range Query in constant time after a preprocessing step in linear time
 - Lowest Common Ancestor in constant time after a preprocessing step in linear time
-- Egg-breaking problem, Hanoi tower, Skyline problem, WordLadder, greatest contiguous sum...
+- Egg-breaking problem, Hanoi tower, Skyline problem, WordLadder, maximum contiguous sum...
 
 Additional reading
 ==================
