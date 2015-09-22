@@ -29,6 +29,7 @@ std::vector<std::pair<int, int>> GetSkyline(std::vector<std::vector<double>> &bu
 {
 	std::vector<std::pair<int, int>> keypoints;
 	std::vector<Edge> edges;
+	// Create two edges for each building and sort them by position, height and starting edge
 	for (auto const &building : buildings)
 	{
 		edges.push_back({ true, building[0], building[2] });
@@ -45,7 +46,7 @@ std::vector<std::pair<int, int>> GetSkyline(std::vector<std::vector<double>> &bu
 		return e2.start;
 	});
 
-	typedef boost::heap::fibonacci_heap<double> FibonacciHeap;	// Max heap
+	typedef boost::heap::fibonacci_heap<double> FibonacciHeap;	// Height priority queue
 	FibonacciHeap heap;
 	std::unordered_multimap<double, FibonacciHeap::handle_type> handles;
 	for (auto const &edge : edges)
@@ -56,10 +57,10 @@ std::vector<std::pair<int, int>> GetSkyline(std::vector<std::vector<double>> &bu
 			if (heap.empty() || height > heap.top())
 				keypoints.push_back({ edge.position, height });
 			handles.insert(std::make_pair(height, heap.push(height)));
-			
 		}
 		else
 		{
+			// Erase from the height priority queue the starting edge of the building
 			double height = edge.height;
 			auto handle_it = handles.find(height);
 			heap.erase(handle_it->second);
