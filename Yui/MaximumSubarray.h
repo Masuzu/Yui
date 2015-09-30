@@ -3,7 +3,6 @@
 
 namespace Yui
 {
-	// Note: this will return 0 if all the elements are negative
     template<class T>
     T LargestContiguousSum(T *a, int length)
     {
@@ -44,6 +43,64 @@ namespace Yui
     	}
     	return global_max;
     }
+    
+    // Return a pair (subarray.start_index, subarray.end_index) for the subarray of A whose sum of elements is the closest to 'target' in O(nlog(n)) time
+	template<class T, class U>
+	void ClosestSubsetSum(std::vector<T> &A, const U &target, std::pair<size_t, size_t> &indices)
+	{
+		// Returns an iterator on the first element in map <= value 
+		static auto ClosestSubsetSum_LowerBound = [](const std::map<U, size_t> &map, const U &value) -> std::map<U, size_t>::const_iterator
+		{
+			auto lower_bound = map.lower_bound(value);	// First element in map >= extra 
+			if (lower_bound == map.end())
+				--lower_bound;	// map has at least 1 entry {0, -1}
+			if (lower_bound->first > value)	// Case when the returned iterator is > extra
+			{
+				if (lower_bound != map.begin())
+					--lower_bound;
+				else
+					lower_bound = map.end();
+			}
+			return lower_bound;
+		};
+	
+		U sum = 0;
+		// Map of (subarray sum from index 0 to i included, i)
+		std::map<U, size_t> map;
+		U min_diff = INT_MAX;
+		map.insert(std::make_pair(0, -1));
+	
+		for (size_t i = 0; i < A.size(); ++i)
+		{
+			sum += A[i];
+			U extra = sum - target;
+	
+			auto lower_bound = ClosestSubsetSum_LowerBound(map, extra);	// first element in map <= extra
+			if (lower_bound != map.end())
+			{
+				U subarray_sum = sum - lower_bound->first;
+				U dist_to_target = std::abs(subarray_sum - target);
+				if (dist_to_target < min_diff)
+				{
+					min_diff = dist_to_target;
+					indices = { lower_bound->second + 1, i};
+				}
+			}
+	
+			auto upper_bound = map.lower_bound(extra);	// first element in map >= extra
+			if (upper_bound != map.end())
+			{
+				U subarray_sum = sum - upper_bound->first;
+				U dist_to_target = std::abs(subarray_sum - target);
+				if (dist_to_target < min_diff)
+				{
+					min_diff = dist_to_target;
+					indices = { upper_bound->second + 1, i };
+				}
+			}
+			map.insert(std::make_pair(sum, i));
+		}
+	}
 }
 
 #endif
