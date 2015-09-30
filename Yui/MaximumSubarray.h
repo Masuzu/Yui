@@ -107,12 +107,20 @@ namespace Yui
 
 /*
 #include <iostream>
+#include <assert.h>
 using namespace std;
 
 int main() {
 	int a[] = {-5, 2, -3, 4, 11, 100, -500};
 	cout << Yui::LargestContiguousSum(a, sizeof(a)/sizeof(int)) << endl;
 	cout << Yui::LargestContiguousProduct(a, sizeof(a)/sizeof(int)) << endl;
+	
+	std::vector<double> b = { 10, 1, 2.6, 6.9, 6, 1, 5 };
+	std::pair <size_t, size_t> indices;
+	ClosestSubsetSum(b, 8.0, indices);
+	std::pair<size_t, size_t> expected_indices = { 4, 5 };
+	assert(indices == expected_indices);
+	
 	return 0;
 }
 */
