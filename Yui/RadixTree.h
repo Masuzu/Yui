@@ -43,6 +43,8 @@ namespace Yui
 			Node *link_ = nullptr;
 			bool leaf_node_ = true;
 
+			void MakeOrphan();
+			
 			// Returns the length of the longest common prefix between prefix_ and s
 			unsigned int LongestCommonPrefix(const Character *s, unsigned int length_of_s);
 
