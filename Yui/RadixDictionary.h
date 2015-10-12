@@ -20,7 +20,7 @@
 
 #define __MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-namespace Hakken
+namespace Yui
 {
 	template<class T, bool delete_value = false>
 	class RadixDictionary
@@ -295,6 +295,9 @@ namespace Hakken
 							prefix_ += link_->prefix_;
 							leaf_node_ = link_->leaf_node_;
 							link_ = link_->link_;
+							// Make node_to_be_merged an orphan to avoir deleting its children
+							node_to_be_merged->link_ = nullptr;
+							node_to_be_merged->next_ = nullptr;
 							delete node_to_be_merged;
 							MergeWithLink();
 						}
@@ -316,6 +319,9 @@ namespace Hakken
 							{
 								Node *node_to_be_merged = next_;
 								next_ = next_->next_;
+								// Make node_to_be_merged an orphan to avoir deleting its children
+								node_to_be_merged->link_ = nullptr;
+								node_to_be_merged->next_ = nullptr;
 								delete node_to_be_merged;
 								MergeWithNext();
 							}
@@ -330,6 +336,9 @@ namespace Hakken
 								leaf_node_ = true;
 								link_ = next_->link_;
 								next_ = next_->next_;
+								// Make node_to_be_merged an orphan to avoir deleting its children
+								node_to_be_merged->link_ = nullptr;
+								node_to_be_merged->next_ = nullptr;
 								delete node_to_be_merged;
 								MergeWithNext();
 							}
