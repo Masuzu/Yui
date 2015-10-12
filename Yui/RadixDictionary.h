@@ -291,64 +291,66 @@ namespace Yui
 
 			void MergeWithLink()
 			{
-				if (link_)
+				if (!link_)
+					return;
+				if (!leaf_node_)
 				{
-					if (!leaf_node_)
+					if (!link_->next_)
 					{
-						if (!link_->next_)
-						{
-							Node *node_to_be_merged = link_;
-							prefix_ += link_->prefix_;
-							leaf_node_ = link_->leaf_node_;
-							link_ = link_->link_;
-							// Make node_to_be_merged an orphan to avoid deleting its children
-							node_to_be_merged->MakeOrphan();
-							delete node_to_be_merged;
-							MergeWithLink();
-						}
+						Node *node_to_be_merged = link_;
+						prefix_ += link_->prefix_;
+						leaf_node_ = link_->leaf_node_;
+						std::swap(data_, link_->data_);
+						link_ = link_->link_;
+						// Make node_to_be_merged an orphan to avoid deleting its children
+						node_to_be_merged->MakeOrphan();
+						delete node_to_be_merged;
+						MergeWithLink();
 					}
-					else if (link_->IsOrphan())
-						link_ = nullptr;
+				}
+				if (link_ && link_->IsOrphan())
+				{
+					delete link_;
+					link_ = nullptr;
 				}
 			}
 
 			void MergeWithNext()
 			{
-				if (next_)
+				if (!next_)
+					return;
+				if (!leaf_node_)
 				{
-					if (!leaf_node_)
+					if (!link_)
 					{
-						if (!next_->leaf_node_)
-						{
-							if (!next_->link_)
-							{
-								Node *node_to_be_merged = next_;
-								next_ = next_->next_;
-								// Make node_to_be_merged an orphan to avoid deleting its children
-								node_to_be_merged->MakeOrphan();
-								delete node_to_be_merged;
-								MergeWithNext();
-							}
-						}
-						else
-						{
-							if (!link_)
-							{
-								// Replace this node with next_
-								Node *node_to_be_merged = next_;
-								prefix_ = next_->prefix_;
-								leaf_node_ = true;
-								link_ = next_->link_;
-								next_ = next_->next_;
-								// Make node_to_be_merged an orphan to avoid deleting its children
-								node_to_be_merged->MakeOrphan();
-								delete node_to_be_merged;
-								MergeWithNext();
-							}
-						}
+						// Replace this node with next_
+						Node *node_to_be_merged = next_;
+						prefix_ = next_->prefix_;
+						leaf_node_ = true;
+						link_ = next_->link_;
+						std::swap(data_, next_->data_);
+						next_ = next_->next_;
+						// Make node_to_be_merged an orphan to avoid deleting its children
+						node_to_be_merged->MakeOrphan();
+						delete node_to_be_merged;
+						MergeWithNext();
 					}
-					else if (next_->IsOrphan())
-						next_ = nullptr;
+					else
+					{
+						if (!next_->leaf_node_ && !next_->link_)
+						{
+							Node *node_to_be_deleted = next_;
+							next_ = next_->next_;
+							node_to_be_deleted->MakeOrphan();
+							delete node_to_be_deleted;
+							MergeWithNext();
+						}
+					}		
+				}
+				if (next_ && next_->IsOrphan())
+				{
+					delete next_;
+					next_ = nullptr;
 				}
 			}
 
