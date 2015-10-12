@@ -86,6 +86,15 @@ namespace Yui
 		Node *root_node_ = nullptr;
 		int num_words_ = 0;
 
+		inline size_t StringLength(const Character *s)
+		{
+#ifdef __USE_WCHAR_T
+			return wcslen(s);
+#else
+			return strlen(s);
+#endif
+		}
+		
 	public:
 		inline RadixTree()	{}
 		~RadixTree();
