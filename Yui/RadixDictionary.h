@@ -47,7 +47,13 @@ namespace Yui
 			Node *link_;
 			bool leaf_node_;
 			T *data_;
-
+			
+			void MakeOrphan()
+			{
+				link_ = nullptr;
+				next_ = nullptr;
+			}
+			
 			// Returns true if s did not exist already in the radix tree
 			bool InternalInsert(const Character *s, unsigned int length_of_s, T *data)
 			{
@@ -295,9 +301,8 @@ namespace Yui
 							prefix_ += link_->prefix_;
 							leaf_node_ = link_->leaf_node_;
 							link_ = link_->link_;
-							// Make node_to_be_merged an orphan to avoir deleting its children
-							node_to_be_merged->link_ = nullptr;
-							node_to_be_merged->next_ = nullptr;
+							// Make node_to_be_merged an orphan to avoid deleting its children
+							node_to_be_merged->MakeOrphan();
 							delete node_to_be_merged;
 							MergeWithLink();
 						}
@@ -319,9 +324,8 @@ namespace Yui
 							{
 								Node *node_to_be_merged = next_;
 								next_ = next_->next_;
-								// Make node_to_be_merged an orphan to avoir deleting its children
-								node_to_be_merged->link_ = nullptr;
-								node_to_be_merged->next_ = nullptr;
+								// Make node_to_be_merged an orphan to avoid deleting its children
+								node_to_be_merged->MakeOrphan();
 								delete node_to_be_merged;
 								MergeWithNext();
 							}
@@ -336,9 +340,8 @@ namespace Yui
 								leaf_node_ = true;
 								link_ = next_->link_;
 								next_ = next_->next_;
-								// Make node_to_be_merged an orphan to avoir deleting its children
-								node_to_be_merged->link_ = nullptr;
-								node_to_be_merged->next_ = nullptr;
+								// Make node_to_be_merged an orphan to avoid deleting its children
+								node_to_be_merged->MakeOrphan();
 								delete node_to_be_merged;
 								MergeWithNext();
 							}
