@@ -47,13 +47,13 @@ namespace Yui
 			Node *link_;
 			bool leaf_node_;
 			T *data_;
-			
+
 			void MakeOrphan()
 			{
 				link_ = nullptr;
 				next_ = nullptr;
 			}
-			
+
 			// Returns true if s did not exist already in the radix tree
 			bool InternalInsert(const Character *s, unsigned int length_of_s, T *data)
 			{
@@ -345,7 +345,7 @@ namespace Yui
 							delete node_to_be_deleted;
 							MergeWithNext();
 						}
-					}		
+					}
 				}
 				if (next_ && next_->IsOrphan())
 				{
@@ -393,6 +393,15 @@ namespace Yui
 		Node *root_node_;
 		int num_words_;
 
+		size_t StringLength(const Character *s)
+		{
+#ifdef __USE_WCHAR_T
+			return wcslen(s);
+#else
+			return strlen(s);
+#endif
+		}
+
 	public:
 		inline RadixDictionary() : root_node_(nullptr), num_words_(0)  {}
 		virtual ~RadixDictionary()
@@ -404,8 +413,7 @@ namespace Yui
 		// Inserts s in the radix tree in O(m) time where m = strlen(s) and splits the existing nodes if they share a common substring with s
 		void Insert(const Character *s, T *data)
 		{
-			{
-				if (strlen(s) == 0)
+				if (StringLength(s) == 0)
 					return;
 				if (!root_node_)
 				{
@@ -415,10 +423,9 @@ namespace Yui
 				}
 				else
 				{
-					if (root_node_->InternalInsert(s, strlen(s), data))
+					if (root_node_->InternalInsert(s, StringLength(s), data))
 						++num_words_;
 				}
-			}
 		}
 
 		// Inserts s in the radix tree in O(m) time where m = s.length() and splits the existing nodes if they share a common substring with s
@@ -490,7 +497,7 @@ namespace Yui
 		{
 			if (root_node_)
 			{
-				root_node_->InternalDelete(s, strlen(s));
+				root_node_->InternalDelete(s, StringLength(s));
 				if (root_node_->IsOrphan())
 				{
 					delete root_node_;
