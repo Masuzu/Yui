@@ -85,6 +85,7 @@
     <ClInclude Include="EggDroppingPuzzle.h" />
     <ClInclude Include="HanoiTower.h" />
     <ClInclude Include="Heap.h" />
+    <ClInclude Include="Islands.h" />
     <ClInclude Include="LowestCommonAncestor.h" />
     <ClInclude Include="QuickSelect.h" />
     <ClInclude Include="RadixDictionary.h" />
@@ -99,6 +100,7 @@
     <ClCompile Include="DamerauLevenshteinDistance.cpp" />
     <ClCompile Include="EggDroppingPuzzle.cpp" />
     <ClCompile Include="HanoiTower.cpp" />
+    <ClCompile Include="Islands.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RadixTree.cpp" />
     <ClCompile Include="StringSearching.cpp" />

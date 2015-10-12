@@ -77,6 +77,19 @@ MultCost MinCostMult(const std::vector<std::pair<int, int>> matrices, int start_
 
 int main()
 {
+	Solution s;
+	vector<vector<char>> v;
+	v.push_back(vector<char>());
+	v[0].push_back('1');
+	v[0].push_back('1');
+	v[0].push_back('1');
+	v[0].push_back('1');
+	v[0].push_back('1');
+	v[0].push_back('1');
+	cout << s.numIslands(v) << endl;
+	return 0;
+
+#if 0
 	Yui::LCANode<char> *root = new Yui::LCANode<char>('A');
 	Yui::LCANode<char> *B = new Yui::LCANode<char>('B');
 	Yui::LCANode<char> *C = new Yui::LCANode<char>('C');
@@ -200,6 +213,8 @@ int main()
 
 	for (auto s : matches)
 		std::cout << s << std::endl;
+
+#endif
 
 #ifdef _DEBUG
 	Yui::DamerauLevenshteinDistance distance("Tamqsd", "Tamarin");

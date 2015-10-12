@@ -57,6 +57,9 @@
     <ClInclude Include="LowestCommonAncestor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Islands.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StringSearching.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Islands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
