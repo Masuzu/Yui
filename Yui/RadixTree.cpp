@@ -275,7 +275,7 @@ namespace Yui
 		}
 		else
 		{
-			if (root_node_->InternalInsert(s, strlen(s)))
+			if (root_node_->InternalInsert(s, StringLength(s)))
 				++num_words_;
 		}
 	}
@@ -300,7 +300,7 @@ namespace Yui
 	{
 		if (root_node_)
 		{
-			Node *n = root_node_->InternalFind(s, strlen(s));
+			Node *n = root_node_->InternalFind(s, StringLength(s));
 			if (n)
 				return n->leaf_node_;
 		}
@@ -322,7 +322,7 @@ namespace Yui
 	{
 		if (root_node_)
 		{
-			root_node_->InternalDelete(s, strlen(s));
+			root_node_->InternalDelete(s, StringLength(s));
 			if (root_node_->IsOrphan())
 			{
 				delete root_node_;
