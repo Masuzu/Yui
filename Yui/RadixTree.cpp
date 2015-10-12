@@ -198,41 +198,39 @@ namespace Yui
 
 	void RadixTree::Node::MergeWithNext()
 	{
-		if (next_)
+		if (!next_)
+			return;
+		if (!leaf_node_)
 		{
-			if (!leaf_node_)
+			if (!link_)
 			{
-				if (!next_->leaf_node_)
-				{
-					if (!next_->link_)
-					{
-						Node *node_to_be_merged = next_;
-						next_ = next_->next_;
-						// Make node_to_be_merged an orphan to avoid deleting its children
-						node_to_be_merged->link_ = nullptr;
-						node_to_be_merged->next_ = nullptr;
-						delete node_to_be_merged;
-					}
-				}
-				else
-				{
-					if (!link_)
-					{
-						// Replace this node with next_
-						Node *node_to_be_merged = next_;
-						prefix_ = next_->prefix_;
-						leaf_node_ = true;
-						link_ = next_->link_;
-						next_ = next_->next_;
-						// Make node_to_be_merged an orphan to avoid deleting its children
-						node_to_be_merged->link_ = nullptr;
-						node_to_be_merged->next_ = nullptr;
-						delete node_to_be_merged;
-					}
-				}
+				// Replace this node with next_
+				Node *node_to_be_merged = next_;
+				prefix_ = next_->prefix_;
+				leaf_node_ = true;
+				link_ = next_->link_;
+				next_ = next_->next_;
+				// Make node_to_be_merged an orphan to avoid deleting its children
+				node_to_be_merged->MakeOrphan();
+				delete node_to_be_merged;
+				MergeWithNext();
 			}
-			else if (next_->IsOrphan())
-				next_ = nullptr;
+			else
+			{
+				if (!next_->leaf_node_ && !next_->link_)
+				{
+					Node *node_to_be_deleted = next_;
+					next_ = next_->next_;
+					node_to_be_deleted->MakeOrphan();
+					delete node_to_be_deleted;
+					MergeWithNext();
+				}
+			}		
+		}
+		else if (next_->IsOrphan())	// && leaf_node_
+		{
+			delete next_;
+			next_ = nullptr;
 		}
 	}
 
