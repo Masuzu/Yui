@@ -6,6 +6,12 @@
 
 namespace Yui
 {
+	void RadixTree::Node::MakeOrphan()
+	{
+		next_ = nullptr;
+		link_ = nullptr;
+	}
+	
 	bool RadixTree::Node::InternalInsert(const Character *s, unsigned int length_of_s)
 	{
 		// Find the node which has a common prefix with s
@@ -175,24 +181,26 @@ namespace Yui
 
 	void RadixTree::Node::MergeWithLink()
 	{
-		if (link_)
+		if (!link_)
+			return;
+		if (!leaf_node_)
 		{
-			if (!leaf_node_)
+			if (!link_->next_)
 			{
-				if (!link_->next_)
-				{
-					Node *node_to_be_merged = link_;
-					prefix_ += link_->prefix_;
-					leaf_node_ = link_->leaf_node_;
-					link_ = link_->link_;
-					// Make node_to_be_merged an orphan to avoid deleting its children
-					node_to_be_merged->link_ = nullptr;
-					node_to_be_merged->next_ = nullptr;
-					delete node_to_be_merged;
-				}
+				Node *node_to_be_merged = link_;
+				prefix_ += link_->prefix_;
+				leaf_node_ = link_->leaf_node_;
+				link_ = link_->link_;
+				// Make node_to_be_merged an orphan to avoid deleting its children
+				node_to_be_merged->MakeOrphan();
+				delete node_to_be_merged;
+				MergeWithLink();
 			}
-			else if (link_->IsOrphan())
-				link_ = nullptr;
+		}
+		if (link_ && link_->IsOrphan())
+		{
+			delete link_;
+			link_ = nullptr;
 		}
 	}
 
@@ -227,7 +235,7 @@ namespace Yui
 				}
 			}		
 		}
-		else if (next_->IsOrphan())	// && leaf_node_
+		if (next_ && next_->IsOrphan())
 		{
 			delete next_;
 			next_ = nullptr;
