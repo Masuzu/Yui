@@ -26,13 +26,9 @@ private:
 		{
 			return (t1 <= start_ && t2 >= end_);
 		}
-		bool Intersects(const T &t1, const T &t2)
+		inline bool Intersects(const T &t1, const T &t2)	// Assumption: t1 <= t2
 		{
-			if(t1 <= start_ && start_ <= t2)
-				return true;
-			if(t1 <= end_ && end_ <= t2)
-				return true;  
-			return false;
+			return (t1 <= end && t2 >= start)
 		}
 	};
 
