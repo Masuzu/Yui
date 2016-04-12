@@ -8,7 +8,7 @@
 // Compute the index of x in the circular array distance_matrix_
 #define __DISTANCE_INDEX(x)	(((x) + 3) % 3)
 
-namespace Hakken
+namespace Yui
 {
 	DamerauLevenshteinDistance::DamerauLevenshteinDistance(const String &reference, const String &target)
 		: reference_(reference), current_index_(0), num_rows_(1), min_distance_(0)

@@ -15,7 +15,7 @@
 
 #include <string>
 
-namespace Hakken
+namespace Yui
 {
 #ifdef __USE_CHAR
 	typedef std::string String;

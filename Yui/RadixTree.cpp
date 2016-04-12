@@ -4,6 +4,12 @@
 
 #define __MIN(x, y)	(((x) < (y)) ? (x) : (y))
 
+#ifdef __USE_CHAR
+#define __EMPTY_STRING ""
+#else
+#define __EMPTY_STRING L""
+#endif
+
 namespace Yui
 {
 	void RadixTree::Node::MakeOrphan()
@@ -266,7 +272,11 @@ namespace Yui
 
 	void RadixTree::Insert(const Character *s)
 	{
+#ifdef __USE_CHAR
 		if (strlen(s) == 0)
+#else
+		if (wcslen(s) == 0)
+#endif
 			return;
 		if (!root_node_)
 		{
@@ -347,7 +357,7 @@ namespace Yui
 	void RadixTree::ExactMatching(const String &s, std::vector<String> &v)
 	{
 		if (root_node_)
-			root_node_->ExactMatching(s.c_str(), s.length(), v, "");
+			root_node_->ExactMatching(s.c_str(), s.length(), v, __EMPTY_STRING);
 	}
 
 	void RadixTree::ApproximateMatching(const String &s, std::vector<String> &v)

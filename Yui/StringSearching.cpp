@@ -1,3 +1,5 @@
+#include "StringSearching.h"
+
 int KMPSearch(const std::string &text, const std::string &pattern)
 {
 	if (text.empty() || pattern.empty() || pattern.size() > text.size())

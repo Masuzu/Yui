@@ -10,37 +10,37 @@ private:
 	std::vector<std::vector<bool>> visited_;
 	T empty_symbol_;
 
-	void ExpandFrom(int i, int j, std::vector<std::vector<T>>& grid)
+	void ExpandFrom(int i, int j, const std::vector<std::vector<T>>& grid)
 	{
 		if (i - 1 >= 0)
 		{
-			if (grid[i - 1][j] != empty_symbol_ && !copy[i - 1][j])
+			if (grid[i - 1][j] != empty_symbol_ && !visited_[i - 1][j])
 			{
-				copy[i - 1][j] = copy[i][j];
+				visited_[i - 1][j] = visited_[i][j];
 				ExpandFrom(i - 1, j, grid);
 			}
 		}
 		if (j - 1 >= 0)
 		{
-			if (grid[i][j - 1] != empty_symbol_ && !copy[i][j - 1])
+			if (grid[i][j - 1] != empty_symbol_ && !visited_[i][j - 1])
 			{
-				copy[i][j - 1] = copy[i][j];
+				visited_[i][j - 1] = visited_[i][j];
 				ExpandFrom(i, j - 1, grid);
 			}
 		}
-		if (i + 1<h)
+		if (i + 1 < height_)
 		{
-			if (grid[i + 1][j] != empty_symbol_ && !copy[i + 1][j])
+			if (grid[i + 1][j] != empty_symbol_ && !visited_[i + 1][j])
 			{
-				copy[i + 1][j] = copy[i][j];
+				visited_[i + 1][j] = visited_[i][j];
 				ExpandFrom(i + 1, j, grid);
 			}
 		}
-		if (j + 1<w)
+		if (j + 1 < width_)
 		{
-			if (grid[i][j + 1] != empty_symbol_ && !copy[i][j + 1])
+			if (grid[i][j + 1] != empty_symbol_ && !visited_[i][j + 1])
 			{
-				copy[i][j + 1] = copy[i][j];
+				visited_[i][j + 1] = visited_[i][j];
 				ExpandFrom(i, j + 1, grid);
 			}
 		}
@@ -53,14 +53,14 @@ public:
 			return 0;
 		width_ = grid[0].size();
 
-		for (int i = 0; i<h; ++i)
+		for (int i = 0; i < height_; ++i)
 		{
-			copy.push_back(std::vector<bool>());
-			for (int j = 0; j<w; ++j)
-				copy[i].push_back(false);
+			visited_.push_back(std::vector<bool>());
+			for (int j = 0; j < width_; ++j)
+				visited_[i].push_back(false);
 		}
 		int num_islands = 0;
-		for (int i = 0; i<height_; ++i)
+		for (int i = 0; i < height_; ++i)
 		{
 			for (int j = 0; j<width_; ++j)
 			{

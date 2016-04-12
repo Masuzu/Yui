@@ -1,11 +1,12 @@
+#include <vector>
+
 class Islands {
 	int h;
 	int w;
-	vector<vector<bool>> copy;
+	std::vector<std::vector<bool>> copy;
 public:
-	void expandFrom(int i, int j, vector<vector<char>>& grid)
+	void expandFrom(int i, int j, std::vector<std::vector<char>>& grid)
 	{
-		cout << "expandFrom" << i << " " << j << endl;
 		if (i - 1 >= 0)
 		{
 			if (grid[i - 1][j] == '1' && !copy[i - 1][j])
@@ -40,7 +41,7 @@ public:
 		}
 	}
 
-	int numIslands(vector<vector<char>>& grid) {
+	int numIslands(std::vector<std::vector<char>>& grid) {
 		h = grid.size();
 		if (h == 0)
 			return 0;
@@ -48,7 +49,7 @@ public:
 
 		for (int i = 0; i<h; ++i)
 		{
-			copy.push_back(vector<bool>());
+			copy.push_back(std::vector<bool>());
 			for (int j = 0; j<w; ++j)
 				copy[i].push_back(false);
 		}

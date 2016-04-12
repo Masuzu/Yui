@@ -9,6 +9,7 @@
 #include "StringSearching.h"
 #include "SegmentTree.h"
 #include "LowestCommonAncestor.h"
+#include "Islands.h"
 
 #include <iostream>
 #include <vector>
@@ -77,7 +78,8 @@ MultCost MinCostMult(const std::vector<std::pair<int, int>> matrices, int start_
 
 int main()
 {
-	Solution s;
+#if 0
+	Islands<char> s;
 	vector<vector<char>> v;
 	v.push_back(vector<char>());
 	v[0].push_back('1');
@@ -86,8 +88,9 @@ int main()
 	v[0].push_back('1');
 	v[0].push_back('1');
 	v[0].push_back('1');
-	cout << s.numIslands(v) << endl;
+	cout << s.NumIslands(v) << endl;
 	return 0;
+#endif
 
 #if 0
 	Yui::LCANode<char> *root = new Yui::LCANode<char>('A');
@@ -196,10 +199,11 @@ int main()
 	auto n_RBTree_min = RBtree.GetMin(RBtree.root());
 	auto n_RBTree_max = RBtree.GetMax(RBtree.root());
 	RBtree.Delete(RBtree.root());
+#endif
 
 	Yui::RadixTree radix_tree;
-	std::ifstream file("..\\SCOWL\\english-words.10");
-	std::string line;
+	std::wifstream file("..\\SCOWL\\english-words.10");
+	std::wstring line;
 	while (file >> line)
 		radix_tree.Insert(line);
 	file.close();
@@ -209,15 +213,13 @@ int main()
 	file.close();
 
 	std::vector<Yui::RadixTree::String> matches;
-	radix_tree.ApproximateMatching("teach", matches);
+	radix_tree.ApproximateMatching(L"collegue", matches);
 
 	for (auto s : matches)
-		std::cout << s << std::endl;
-
-#endif
+		std::wcout << s << std::endl;
 
 #ifdef _DEBUG
-	Yui::DamerauLevenshteinDistance distance("Tamqsd", "Tamarin");
+	Yui::DamerauLevenshteinDistance distance(L"Tamqsd", L"Tamarin");
 	distance.PrintDistance();
 #endif
 	system("pause");
