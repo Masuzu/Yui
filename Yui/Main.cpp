@@ -9,7 +9,6 @@
 #include "StringSearching.h"
 #include "SegmentTree.h"
 #include "LowestCommonAncestor.h"
-#include "Islands.h"
 
 #include <iostream>
 #include <vector>
@@ -36,62 +35,9 @@ public:
 	bool operator==(const Test &t)	const	{ return i_ == t.i_; }
 };
 
-bool IntComparator(int a, int b)
-{
-	return a > b;
-}
-
-struct MultCost
-{
-	int min;
-	int M;
-	int N;
-	std::vector<int> split;
-};
-MultCost MinCostMult(const std::vector<std::pair<int, int>> matrices, int start_idx, int num)
-{
-	if (num == 1)
-		return{ 0, matrices[start_idx].first, matrices[start_idx].second };
-	if (num == 2)
-		return{ matrices[start_idx].first*matrices[start_idx].second*matrices[start_idx + 1].second, matrices[start_idx].first, matrices[start_idx + 1].second, { start_idx + 1 } };
-	int min = INT_MAX;
-	int split;
-	MultCost min_mult_cost_1;
-	MultCost min_mult_cost_2;
-	for (int i = start_idx + 1; i <= num - 1; ++i)
-	{
-		auto M1 = MinCostMult(matrices, start_idx, i - start_idx);
-		auto M2 = MinCostMult(matrices, i, num - i);
-		if (min > M1.min + M2.min + M1.M*M1.N*M2.N)
-		{
-			min = M1.min + M2.min + M1.M*M1.N*M2.N;
-			min_mult_cost_1 = M1;
-			min_mult_cost_2 = M2;
-			split = i;
-		}
-	}
-	for (auto s : min_mult_cost_2.split)
-		min_mult_cost_1.split.push_back(s);
-	min_mult_cost_1.split.push_back(split);
-	return{ min, matrices[0].first, matrices[num - 1].second, min_mult_cost_1.split };
-}
 
 int main()
 {
-#if 0
-	Islands<char> s;
-	vector<vector<char>> v;
-	v.push_back(vector<char>());
-	v[0].push_back('1');
-	v[0].push_back('1');
-	v[0].push_back('1');
-	v[0].push_back('1');
-	v[0].push_back('1');
-	v[0].push_back('1');
-	cout << s.NumIslands(v) << endl;
-	return 0;
-#endif
-
 #if 0
 	Yui::LCANode<char> *root = new Yui::LCANode<char>('A');
 	Yui::LCANode<char> *B = new Yui::LCANode<char>('B');

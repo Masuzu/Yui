@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,13 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5BF58183-F6E9-468A-9C89-0000E73D89A7}</ProjectGuid>
+    <ProjectGuid>{D599C9E5-5A27-4302-BAEB-9741524FEEF8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Yui</RootNamespace>
+    <RootNamespace>UTest_Islands</RootNamespace>
+    <ProjectName>IslandsUnitTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -41,6 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\Yui;$(SolutionDir)\googletest\googletest;$(SolutionDir)\googletest\googletest\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\googletest\googlemock\gtest\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,12 +55,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <OpenMPSupport>true</OpenMPSupport>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>gtest_main.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,8 +72,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -80,30 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BinaryTree.h" />
-    <ClInclude Include="DamerauLevenshteinDistance.h" />
-    <ClInclude Include="EggDroppingPuzzle.h" />
-    <ClInclude Include="HanoiTower.h" />
-    <ClInclude Include="Heap.h" />
-    <ClInclude Include="Islands.h" />
-    <ClInclude Include="LowestCommonAncestor.h" />
-    <ClInclude Include="QuickSelect.h" />
-    <ClInclude Include="RadixDictionary.h" />
-    <ClInclude Include="RadixTree.h" />
-    <ClInclude Include="RangeMinimumQuery.h" />
-    <ClInclude Include="RBTree.h" />
-    <ClInclude Include="SegmentTree.h" />
-    <ClInclude Include="Sort.h" />
-    <ClInclude Include="StringSearching.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="DamerauLevenshteinDistance.cpp" />
-    <ClCompile Include="EggDroppingPuzzle.cpp" />
-    <ClCompile Include="HanoiTower.cpp" />
-    <ClCompile Include="Islands.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="RadixTree.cpp" />
-    <ClCompile Include="StringSearching.cpp" />
+    <ClCompile Include="IslandsUnitTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
