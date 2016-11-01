@@ -1,3 +1,5 @@
+#ifdef __BOST
+
 #include <boost/heap/fibonacci_heap.hpp>
 #include <vector>
 #include <unordered_map>
@@ -74,3 +76,6 @@ std::vector<std::pair<int, int>> GetSkyline(std::vector<std::vector<double>> &bu
 	}
 	return keypoints;
 }
+
+
+#endif

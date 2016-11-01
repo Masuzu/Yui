@@ -83,10 +83,12 @@
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="DamerauLevenshteinDistance.h" />
     <ClInclude Include="EggDroppingPuzzle.h" />
+    <ClInclude Include="Euler\MaximumPathSum.h" />
     <ClInclude Include="HanoiTower.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="Islands.h" />
     <ClInclude Include="LowestCommonAncestor.h" />
+    <ClInclude Include="MaximumSubarray.h" />
     <ClInclude Include="QuickSelect.h" />
     <ClInclude Include="RadixDictionary.h" />
     <ClInclude Include="RadixTree.h" />
@@ -94,16 +96,19 @@
     <ClInclude Include="RBTree.h" />
     <ClInclude Include="SegmentTree.h" />
     <ClInclude Include="Sort.h" />
+    <ClInclude Include="StabbingSegmentTree.h" />
     <ClInclude Include="StringSearching.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DamerauLevenshteinDistance.cpp" />
     <ClCompile Include="EggDroppingPuzzle.cpp" />
     <ClCompile Include="HanoiTower.cpp" />
-    <ClCompile Include="Islands.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Euler\MaximumPathSum.cpp" />
     <ClCompile Include="RadixTree.cpp" />
+    <ClCompile Include="Skyline.cpp" />
     <ClCompile Include="StringSearching.cpp" />
+    <ClCompile Include="WordLadder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

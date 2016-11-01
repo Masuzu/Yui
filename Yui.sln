@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yui", "Yui\Yui.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IslandsUnitTests", "IslandsUnitTests\IslandsUnitTests.vcxproj", "{D599C9E5-5A27-4302-BAEB-9741524FEEF8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Euler67UnitTests", "Euler67UnitTests\Euler67UnitTests.vcxproj", "{99637BBD-9B13-4442-B563-9DB1F916652F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LCAUnitTests", "LCAUnitTests\LCAUnitTests.vcxproj", "{2711D06E-90E8-4668-8255-442C32108EF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +25,14 @@ Global
 		{D599C9E5-5A27-4302-BAEB-9741524FEEF8}.Debug|Win32.Build.0 = Debug|Win32
 		{D599C9E5-5A27-4302-BAEB-9741524FEEF8}.Release|Win32.ActiveCfg = Release|Win32
 		{D599C9E5-5A27-4302-BAEB-9741524FEEF8}.Release|Win32.Build.0 = Release|Win32
+		{99637BBD-9B13-4442-B563-9DB1F916652F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{99637BBD-9B13-4442-B563-9DB1F916652F}.Debug|Win32.Build.0 = Debug|Win32
+		{99637BBD-9B13-4442-B563-9DB1F916652F}.Release|Win32.ActiveCfg = Release|Win32
+		{99637BBD-9B13-4442-B563-9DB1F916652F}.Release|Win32.Build.0 = Release|Win32
+		{2711D06E-90E8-4668-8255-442C32108EF4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2711D06E-90E8-4668-8255-442C32108EF4}.Debug|Win32.Build.0 = Debug|Win32
+		{2711D06E-90E8-4668-8255-442C32108EF4}.Release|Win32.ActiveCfg = Release|Win32
+		{2711D06E-90E8-4668-8255-442C32108EF4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D599C9E5-5A27-4302-BAEB-9741524FEEF8}</ProjectGuid>
+    <ProjectGuid>{2711D06E-90E8-4668-8255-442C32108EF4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>UTest_Islands</RootNamespace>
-    <ProjectName>IslandsUnitTests</ProjectName>
+    <RootNamespace>LCATests</RootNamespace>
+    <ProjectName>LCAUnitTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -48,7 +48,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)\Yui;$(SolutionDir)\googletest\googletest;$(SolutionDir)\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\googletest\googlemock\gtest\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -57,7 +56,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,7 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IslandsUnitTests.cpp" />
+    <ClCompile Include="LCAUnitTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

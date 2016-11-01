@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D599C9E5-5A27-4302-BAEB-9741524FEEF8}</ProjectGuid>
+    <ProjectGuid>{99637BBD-9B13-4442-B563-9DB1F916652F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>UTest_Islands</RootNamespace>
-    <ProjectName>IslandsUnitTests</ProjectName>
+    <RootNamespace>Euler67Tests</RootNamespace>
+    <ProjectName>Euler67UnitTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -43,12 +43,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\Yui;$(SolutionDir)\googletest\googletest;$(SolutionDir)\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\googletest\googlemock\gtest\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\googletest\googlemock\gtest\Debug;$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)\Yui;$(SolutionDir)\googletest\googletest;$(SolutionDir)\googletest\googletest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\googletest\googlemock\gtest\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\googletest\googlemock\gtest\Release;$(SolutionDir)\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -57,12 +57,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gtest_main.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest_main.lib;gtest.lib;Yui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,11 +79,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gtest_main.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtest_main.lib;gtest.lib;Yui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IslandsUnitTests.cpp" />
+    <ClCompile Include="Euler67UnitTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
